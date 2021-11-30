@@ -1,0 +1,20 @@
+<component name="libraryTable">
+  <library name="Gradle: androidx.camera:camera-view:1.0.0-alpha25@aar">
+    <ANNOTATIONS>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/c914e9a4084670223204408f2503027a/transformed/jetified-camera-view-1.0.0-alpha25/annotations.zip!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/dc81c9ab5bff87f760aebf660a65c51a/jetified-camera-view-1.0.0-alpha25/annotations.zip!/" />
+    </ANNOTATIONS>
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/c914e9a4084670223204408f2503027a/transformed/jetified-camera-view-1.0.0-alpha25/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/c914e9a4084670223204408f2503027a/transformed/jetified-camera-view-1.0.0-alpha25/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/c914e9a4084670223204408f2503027a/transformed/jetified-camera-view-1.0.0-alpha25/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/dc81c9ab5bff87f760aebf660a65c51a/jetified-camera-view-1.0.0-alpha25/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/dc81c9ab5bff87f760aebf660a65c51a/jetified-camera-view-1.0.0-alpha25/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/dc81c9ab5bff87f760aebf660a65c51a/jetified-camera-view-1.0.0-alpha25/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.camera/camera-view/1.0.0-alpha25/6b3bf91d4346d67ad506d2a7544bcd361c88aadb/camera-view-1.0.0-alpha25-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.securedatasharingfordtn.login.LoginFragment"
+    >
+    <data>
+        <variable
+            name="loginViewModel"
+            type="com.example.securedatasharingfordtn.login.LoginViewModel"/>
+    </data>
+
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    >
+
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+
+        android:layout_height="192dp"
+        android:layout_width="match_parent">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:toolbarId="@+id/toolbar"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:layout_scrollInterpolator="@android:anim/decelerate_interpolator"
+            app:expandedTitleMarginEnd="64dp"
+            app:expandedTitleMarginStart="48dp"
+            app:contentScrim="?attr/colorPrimary">
+
+
+            <ImageView
+                android:id="@+id/app_bar_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_collapseMode="parallax"
+                android:fitsSystemWindows="true"
+
+                android:src="@drawable/maxresdefault"
+                android:scaleType="centerCrop" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_title"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="34sp"
+                android:translationY="@dimen/app_title_translation_y" />
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                 />
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/loginSetupTab"
+                android:layout_width="match_parent"
+                android:layout_height="58dp"
+                android:layout_gravity="bottom"
+
+                app:layout_collapseMode="pin">
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/button_login" />
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/button_setup" />
+
+
+            </com.google.android.material.tabs.TabLayout>
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+
+
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="32dp"
+                android:text="@string/label_login_username"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toStartOf="@+id/editTextTextPersonName"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/editTextTextPersonName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ems="10"
+                android:hint="@string/hint_login_username"
+                android:inputType="textPersonName"
+                android:text="@={loginViewModel.username}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/textView2"
+                app:layout_constraintTop_toTopOf="@+id/textView2" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="32dp"
+                android:text="@string/label_login_password"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toStartOf="@+id/editTextTextPassword"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName" />
+
+            <EditText
+                android:id="@+id/editTextTextPassword"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ems="10"
+                android:inputType="textPassword"
+                android:text="@={loginViewModel.password}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/textView3"
+                app:layout_constraintTop_toTopOf="@+id/textView3" />
+            <ImageButton
+                android:id="@+id/imageButton2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:src="@android:drawable/ic_menu_view"
+                android:onClick="@{() -> loginViewModel.onViewPassword()}"
+                app:layout_constraintBottom_toBottomOf="@+id/editTextTextPassword"
+                app:layout_constraintEnd_toEndOf="@+id/editTextTextPassword"
+                app:layout_constraintTop_toTopOf="@+id/editTextTextPassword" />
+
+
+            <EditText
+                android:id="@+id/editTextNumberPassword"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:ems="10"
+                android:inputType="numberPassword"
+                android:text="@={loginViewModel.missionCode}"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toStartOf="@+id/imageButton"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/textView4"
+                app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="@string/mission_code"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toStartOf="@+id/editTextNumberPassword"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/editTextNumberPassword" />
+
+            <ImageButton
+                android:id="@+id/imageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:onClick="@{() -> loginViewModel.onUsingCamera()}"
+                android:src="@android:drawable/ic_menu_camera"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/editTextNumberPassword"
+                app:layout_constraintTop_toTopOf="@+id/editTextNumberPassword" />
+
+            <Button
+                android:id="@+id/button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_marginTop="32dp"
+
+                android:backgroundTint="@{((editTextTextPassword.text==&quot;&quot;)||(editTextTextPassword.text==&quot;&quot;))?@color/gray:@color/purple_700}"
+                android:clickable="@{((editTextTextPassword.text==&quot;&quot;)||(editTextTextPassword.text==&quot;&quot;))?false:true}"
+                android:onClick="@{() -> loginViewModel.tryLoginEvent()}"
+                android:text="@string/button_login"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword" />
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:backgroundTint="@{((editTextTextPassword.text==&quot;&quot;)||(editTextTextPassword.text==&quot;&quot;)||(editTextNumberPassword.text==&quot;&quot;))?@color/gray:@color/purple_700}"
+                android:clickable="@{((editTextTextPassword.text==&quot;&quot;)||(editTextTextPassword.text==&quot;&quot;)||(editTextNumberPassword.text==&quot;&quot;))?false:true}"
+                android:onClick="@{() ->loginViewModel.trySetupEvent()}"
+                android:text="@string/button_setup"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editTextNumberPassword" />
+
+
+            <com.budiyev.android.codescanner.CodeScannerView
+                android:id="@+id/viewFinder"
+                android:layout_width="0dip"
+                android:layout_height="0dip"
+                android:layout_gravity="center"
+                android:layout_marginStart="4dp"
+
+                android:layout_marginEnd="4dp"
+                android:layout_weight="1"
+                android:visibility="invisible"
+                app:autoFocusButtonColor="@android:color/white"
+                app:autoFocusButtonVisible="true"
+                app:flashButtonColor="@android:color/white"
+                app:flashButtonVisible="true"
+                app:frameAspectRatioHeight="1"
+                app:frameAspectRatioWidth="3"
+                app:frameColor="@android:color/white"
+                app:frameCornersRadius="0dp"
+                app:frameCornersSize="50dp"
+                app:frameSize="0.75"
+                app:frameThickness="2dp"
+                app:layout_constraintBottom_toTopOf="@+id/button2"
+                app:layout_constraintEnd_toStartOf="@+id/imageButton"
+                app:layout_constraintStart_toStartOf="@+id/editTextNumberPassword"
+                app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword"
+                app:maskColor="#77000000"
+                tools:ignore="MissingClass" />
+
+
+
+
+            <!--            <androidx.camera.view.PreviewView-->
+            <!--                android:id="@+id/viewFinder"-->
+            <!--                android:layout_width="0dip"-->
+            <!--                android:layout_height="0dip"-->
+            <!--                android:layout_gravity="center"-->
+            <!--                android:layout_marginStart="8dp"-->
+
+            <!--                android:layout_marginEnd="8dp"-->
+            <!--                android:layout_weight="1"-->
+            <!--                android:visibility="invisible"-->
+            <!--                app:layout_constraintBottom_toTopOf="@+id/button2"-->
+            <!--                app:layout_constraintEnd_toStartOf="@+id/imageButton"-->
+            <!--                app:layout_constraintStart_toStartOf="@+id/editTextNumberPassword"-->
+            <!--                app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword" />-->
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</layout>
