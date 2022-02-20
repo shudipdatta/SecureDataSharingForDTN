@@ -58,3 +58,5 @@
   The App architecture is in the report files in the repository.
   
   
+## Bugs to fix
+If wifi not connected, "Setup" crashes the app
