@@ -63,3 +63,5 @@
 If wifi not connected, "Setup" crashes the app
 
 Multiple activity creates multiple databases, Hence bring everything on fragment activity
+
+Testing: Preference.userattr+members only updated for login, not while in setup
