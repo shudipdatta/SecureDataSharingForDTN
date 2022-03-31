@@ -347,7 +347,7 @@ class ImageActivity : AppCompatActivity() {
 //            ExifInterface.ORIENTATION_NORMAL -> image
 //            else -> image
 //        }
-        return rotateImage(image, 90)
+        return rotateImage(image, 0)
     }
 
     private fun rotateImage(image: Bitmap, angle: Int): Bitmap? {

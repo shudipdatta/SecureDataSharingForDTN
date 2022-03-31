@@ -3,7 +3,7 @@ package com.example.securedatasharingfordtn.database
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-@Entity(tableName = "user_login_data_table")
+@Entity(tableName = "login_user_data_table")
 data class LoginUserData(
     @PrimaryKey(autoGenerate = true)
     var userId: Int = 0,

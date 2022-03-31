@@ -1,7 +1,5 @@
-package com.example.securedatasharingfordtn.connection
+package com.example.securedatasharingfordtn
 import android.app.Application
-import android.provider.Settings
-import android.util.Log
 
 class GlobalApp: Application() {
 //    companion object {
@@ -13,6 +11,26 @@ class GlobalApp: Application() {
 //            return deviceId
 //        }
 //    }
+
+    private var username: String? = null
+    private var attributes: String? = null
+
+
+    fun getUserName(): String? {
+        return username
+    }
+
+    fun setUserName(uname: String?) {
+        username = uname
+    }
+
+    fun getAttributes(): String? {
+        return attributes
+    }
+
+    fun setAttributes(attrs: String?) {
+        attributes = attrs
+    }
 
 //    override fun onCreate() {
 //        super.onCreate()

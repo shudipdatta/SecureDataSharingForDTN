@@ -11,9 +11,11 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.example.securedatasharingfordtn.GlobalApp
 import com.example.securedatasharingfordtn.Preferences
 import com.example.securedatasharingfordtn.R
 import com.example.securedatasharingfordtn.SharedViewModel
+import com.example.securedatasharingfordtn.congestion.EndpointInfo
 import com.example.securedatasharingfordtn.database.LoginUserData
 import com.example.securedatasharingfordtn.revoabe.Ciphertext
 import com.example.securedatasharingfordtn.revoabe.PrivateKey
@@ -55,6 +57,15 @@ class ConnectionActivity : AppCompatActivity(), ConnectionService.ServiceCallbac
         val pairingDir = bundle.getString("pairingDir")
         if (keys !=null && pairingDir != null)
             bootstrap(pairingDir,keys)
+
+        //test
+        //val username = bundle.getString("username")
+        //val userattrs = bundle.getString("userattrs")
+        val globalVariable: GlobalApp = applicationContext as GlobalApp
+        val username = globalVariable.getUserName()
+        val userattrs = globalVariable.getAttributes()
+        //Log.d("Name + Attrs",username!! + "|" + userattrs!!)
+
         //Switch to Main activity
         val backConActButton: Button = findViewById(R.id.back_connection_activity);
         backConActButton.setOnClickListener {
@@ -89,6 +100,7 @@ class ConnectionActivity : AppCompatActivity(), ConnectionService.ServiceCallbac
     // select a receiver to see image list
     private fun switchImgAct(position: Int) {
         selectedEndPointName = listview.getItemAtPosition(position) as String
+        selectedEndPointName = selectedEndPointName.split("\n")[0].split(" ").last()
 
         val img_act_intent = Intent(this, ImageActivity::class.java)
         img_act_intent.putExtra("parent", "ConnectionActivity")
@@ -122,7 +134,14 @@ class ConnectionActivity : AppCompatActivity(), ConnectionService.ServiceCallbac
         return File(mediaStorageDir.getPath() + File.separator.toString() + fileName)
     }
 
-    override fun refreshConnectionList(endpointNameConnected: ArrayList<String>) {
+    override fun refreshConnectionList(endpoints: HashMap<String, EndpointInfo>) {
+        val endpointNameConnected = ArrayList<String>()
+        for ((name, endpoint) in endpoints) {
+//            if (endpoint.status > 0) {
+                endpointNameConnected.add("Device ID: " + endpoint.name + "\nName: " + endpoint.username + "\nAttributes: " + endpoint.userattrs) // + "\n" + EndpointInfo.StatusString[endpoint.status])
+//            }
+        }
+
         listElementsArrayList.clear()
         listElementsArrayList.addAll(endpointNameConnected)
         adapter.notifyDataSetChanged();
@@ -132,22 +151,11 @@ class ConnectionActivity : AppCompatActivity(), ConnectionService.ServiceCallbac
         Toast.makeText(applicationContext, "Sending to $selectedEndPointName", Toast.LENGTH_LONG).show()
         conService.textMsg = fileName
         conService.imageMsg = photoFile
+        var policyText : EditText  = findViewById(R.id.editTextPolicy)
+        conService.policyMsg = policyText.text.toString()
 
-
-        val RLStringList = preferences.getRevokedMembers().toList()
-        var RL = listOf<Int>()
-        for(RLStr in RLStringList){
-            RL+= RLStr.toInt()+1
-        }
-        this.publicKey.printPublicKey()
-        var policyText : EditText  =findViewById(R.id.editTextPolicy)
-        Log.i("encrypt", "policy: "+policyText.text.toString() )
-        conService.encryptedFilename = ReVo_ABE.encrypt(this.pairing
-            ,this.publicKey,fileName.toByteArray(),policyText.text.toString(), RL)
-
-
-
-        conService.setConnection(selectedEndPointName)
+        var selectedEndpointId = conService.endpointNameIDMap.get(selectedEndPointName)
+        conService.setConnection(selectedEndpointId!!)
     }
 
     override fun onStart() {
@@ -179,7 +187,7 @@ class ConnectionActivity : AppCompatActivity(), ConnectionService.ServiceCallbac
             conService.setCallbacks(this@ConnectionActivity); // register
 
             //initial list load
-            refreshConnectionList(conService.endpointNameConnected)
+            refreshConnectionList(conService.endpoints)
         }
 
         override fun onServiceDisconnected(arg0: ComponentName) {

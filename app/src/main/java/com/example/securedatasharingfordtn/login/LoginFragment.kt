@@ -2,7 +2,6 @@ package com.example.securedatasharingfordtn.login
 
 import android.Manifest
 import android.content.Context
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.text.method.HideReturnsTransformationMethod
@@ -23,7 +22,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import com.budiyev.android.codescanner.*
 import com.example.securedatasharingfordtn.Preferences
 import com.example.securedatasharingfordtn.R
@@ -32,8 +30,6 @@ import com.example.securedatasharingfordtn.database.DTNDataSharingDatabase
 import com.example.securedatasharingfordtn.databinding.FragmentLoginBinding
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
-import it.unisa.dia.gas.jpbc.Pairing
-import it.unisa.dia.gas.plaf.jpbc.pairing.PairingFactory
 import java.io.File
 import java.io.InputStream
 import java.util.concurrent.ExecutorService
@@ -76,7 +72,7 @@ class LoginFragment : Fragment()  {
 
         val application = requireNotNull(this.activity).application
 
-        val dataSource = DTNDataSharingDatabase.getInstance(application).dataSharingDatabaseDao
+        val dataSource = DTNDataSharingDatabase.getInstance(application).loginUserDao
 
         val viewModelFactory = LoginViewModelFactory(dataSource, application)
         val sharedModel=ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
@@ -217,6 +213,11 @@ class LoginFragment : Fragment()  {
                 sharedModel.bootstrap(hardcodedCurveFileDir(),loginViewModel.getUser())
                 loginViewModel.doneDirectToMainEvent()
                 preferences.setMembers(loginViewModel.members)
+
+                //test
+                preferences.setUserName(loginViewModel.getUser().username)//.getUser().firstname + " " + loginViewModel.getUser().lastname)
+                preferences.setUserAttrs(loginViewModel.userattrs)
+
                 view?.findNavController()?.navigate(R.id.action_loginFragment_to_mainFragment)
 
             }

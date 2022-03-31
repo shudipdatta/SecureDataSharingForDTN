@@ -14,9 +14,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
+import com.example.securedatasharingfordtn.GlobalApp
+import com.example.securedatasharingfordtn.Preferences
 import com.example.securedatasharingfordtn.R
-import com.example.securedatasharingfordtn.SharedViewModel
 
 class ShudipActivity : AppCompatActivity() {
     companion object {
@@ -31,6 +31,14 @@ class ShudipActivity : AppCompatActivity() {
     lateinit var sharedKeys: ByteArray
     lateinit var sharedDir: String
 
+    //test
+    lateinit var username: String
+    lateinit var userattrs: String
+    private lateinit var preferences: Preferences
+
+    //to get own data
+    //private lateinit var userDataSrc: LoginUserDao
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shudip)
@@ -39,6 +47,23 @@ class ShudipActivity : AppCompatActivity() {
         val bundle = intent.extras
         sharedDir = bundle!!.getString("pairingDir").toString()
         sharedKeys = bundle.getByteArray("keys")!!
+
+        //test
+        preferences = Preferences(this)
+        username = preferences.getUserName().toString()
+        userattrs = preferences.getUserAttrs().toString()
+        val globalVariable: GlobalApp = applicationContext as GlobalApp
+        globalVariable.setUserName(username)
+        globalVariable.setAttributes(userattrs)
+
+//        var context = this.application
+//        GlobalScope.launch {
+//            userDataSrc = DTNDataSharingDatabase.getInstance(context).loginUserDao
+//            val userData = userDataSrc.getName()
+//            if (userData != null) {
+//                Log.d("Database", userData.firstname + "|" + userData.lastname)
+//            }
+//        }
 
         //Switch to connection activity
         switchConActButton = findViewById(R.id.switch_connection_activity)
@@ -52,7 +77,7 @@ class ShudipActivity : AppCompatActivity() {
         switchImgActButton.setOnClickListener {
             checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, READ_PERMISSION_CODE)
         }
-        Log.i("Shudip", "11111111111111111222222222222333333333333"+ sharedDir)
+        Log.i("Shudip", ""+ sharedDir)
         //Switch Connection on and off
         val connectionOnOffSwitch: Switch = findViewById(R.id.connection_on_off)
         connectionOnOffSwitch.setOnCheckedChangeListener { _,
@@ -81,6 +106,11 @@ class ShudipActivity : AppCompatActivity() {
         val con_act_intent = Intent(this, ConnectionActivity::class.java)
         con_act_intent.putExtra("keys", sharedKeys);
         con_act_intent.putExtra("pairingDir", sharedDir);
+
+        //test
+        //con_act_intent.putExtra("username", username);
+        //con_act_intent.putExtra("userattrs", userattrs);
+
         startActivity(con_act_intent)
     }
 

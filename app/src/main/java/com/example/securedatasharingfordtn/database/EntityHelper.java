@@ -1,5 +1,9 @@
 package com.example.securedatasharingfordtn.database;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -19,6 +23,7 @@ public class EntityHelper {
 		return ByteBuffer.wrap(myB).order(ByteOrder.nativeOrder()).getInt();
 	}
 	
+	@RequiresApi(api = Build.VERSION_CODES.O)
 	public static byte[] stringList_to_bytes(List<String> sl) {
 		byte[] valueByteArray = String.join(",", sl).getBytes();
 		ByteArrayOutputStream bs = new ByteArrayOutputStream();

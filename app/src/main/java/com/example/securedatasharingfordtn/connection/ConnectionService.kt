@@ -23,9 +23,14 @@ import java.nio.ByteOrder
 import java.nio.charset.StandardCharsets
 import android.content.Intent.getIntent
 import android.os.Bundle
+import android.widget.EditText
 import androidx.lifecycle.ViewModelProvider
+import com.example.securedatasharingfordtn.GlobalApp
 import com.example.securedatasharingfordtn.Preferences
+import com.example.securedatasharingfordtn.R
 import com.example.securedatasharingfordtn.SharedViewModel
+import com.example.securedatasharingfordtn.congestion.EndpointInfo
+import com.example.securedatasharingfordtn.login.LoginViewModel
 import com.example.securedatasharingfordtn.revoabe.Ciphertext
 import com.example.securedatasharingfordtn.revoabe.PrivateKey
 import com.example.securedatasharingfordtn.revoabe.PublicKey
@@ -41,18 +46,21 @@ class ConnectionService : Service() {
     val TAG = "NearbyService"
     val SERVICE_ID = "AFRL_project"
     lateinit var DEVICE_ID: String
+    //test
+    lateinit var globalVariable: GlobalApp
+
     private val STRATEGY: Strategy = Strategy.P2P_CLUSTER
     private val context: Context = this
     var endpointIDConnected: ArrayList<String> = ArrayList()
-    var endpointNameConnected: ArrayList<String> = ArrayList()
     var endpointIDNameMap: HashMap<String, String> = HashMap()
     var endpointNameIDMap: HashMap<String, String> = HashMap()
+    var endpoints: HashMap<String, EndpointInfo> = HashMap() // <EndpointName, Info>
 
     private val conServiceBinder: IBinder = ConServiceBinder()
     private var serviceCallbacks: ServiceCallbacks? = null
 
+    var policyMsg: String? = null
     var textMsg: String? = null
-    var encryptedFilename: Ciphertext? = null
     var imageMsg: File? = null
     var rcvdFilename: String? = null
     private val incomingFilePayloads = SimpleArrayMap<Long, Payload>()
@@ -64,7 +72,7 @@ class ConnectionService : Service() {
     lateinit var pairing: Pairing
 
     interface ServiceCallbacks {
-        fun refreshConnectionList(endpointNameConnected: ArrayList<String>)
+        fun refreshConnectionList(endpoints: HashMap<String, EndpointInfo>)
     }
     fun setCallbacks(callbacks: ServiceCallbacks?) {
         if (callbacks != null) {
@@ -99,6 +107,13 @@ class ConnectionService : Service() {
     override fun onCreate() {
         Log.d(TAG, "Inside onCreate ConnectionService")
         DEVICE_ID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID)
+
+        //test
+        globalVariable = applicationContext as GlobalApp
+        //val username = globalVariable.getUserName()
+        //val userattrs = globalVariable.getAttributes()
+        //Log.d("Name + Attrs",username!! + "|" + userattrs!!)
+
         advertiserHandler.post(advertiserRunnable)
         discoveryHandler.post(discoverRunnable)
     }
@@ -126,9 +141,12 @@ class ConnectionService : Service() {
 
     private fun startAdvertising() {
         val advertisingOptions = AdvertisingOptions.Builder().setStrategy(STRATEGY).build()
+        val username = globalVariable.getUserName()
+        val userattrs = globalVariable.getAttributes()
+        val initdata = DEVICE_ID + "\t" + username!! + "\t" + userattrs!!
         Nearby.getConnectionsClient(context)
             .startAdvertising(
-                DEVICE_ID, SERVICE_ID, connectionLifeCycleCallback, advertisingOptions
+                initdata, SERVICE_ID, connectionLifeCycleCallback, advertisingOptions
             )
             .addOnSuccessListener(
                 OnSuccessListener { unused: Void? ->
@@ -155,14 +173,29 @@ class ConnectionService : Service() {
     private val endpointDiscoveryCallback: EndpointDiscoveryCallback =
         object : EndpointDiscoveryCallback() {
             override fun onEndpointFound(endpointId: String, info: DiscoveredEndpointInfo) {
-                // An endpoint was found. We request a connection to it.
+                Log.d(TAG,"An endpoint was found. We request a connection to it.")
                 if (info.endpointName != DEVICE_ID && !endpointIDConnected.contains(endpointId)) {
                     endpointIDConnected.add(endpointId)
-                    endpointNameConnected.add(info.endpointName)
-                    endpointIDNameMap[endpointId] = info.endpointName
-                    endpointNameIDMap[info.endpointName] = endpointId
-                    Log.d("Test", info.endpointName)
-                    serviceCallbacks?.refreshConnectionList(endpointNameConnected)
+                    val initData = info.endpointName.split("\t")
+                    if (!endpoints.containsKey(info.endpointName)) {
+                        //create a endpoint object, however, it doesn't have any data till now
+                        val endpoint = EndpointInfo()
+                        endpoint.name = initData[0]
+                        endpoint.username = initData[1]
+                        endpoint.userattrs = initData[2].replace(',',' ')
+                        endpoints.put(initData[0], endpoint)
+                    }
+
+                    endpointIDNameMap[endpointId] = initData[0]
+                    endpointNameIDMap[initData[0]] = endpointId
+
+//                    if (endpoints.get(info.endpointName)!!.status  != -1) {
+//                        //initial info is there, so reload the gui
+                        serviceCallbacks?.refreshConnectionList(endpoints)
+//                    }
+//                    else {
+//                        setConnection(endpointId)
+//                    }
                 }
             }
 
@@ -170,18 +203,26 @@ class ConnectionService : Service() {
                 Log.d(TAG, "A previously discovered endpoint has gone away.")
                 if (endpointIDConnected.contains(endpointId)) {
                     endpointIDConnected.remove(endpointId)
-                    endpointNameConnected.remove(endpointIDNameMap[endpointId])
+
+                    val endpointName = endpointIDNameMap[endpointId]
+                    endpoints.remove(endpointName)
+//                    if (endpoints.get(endpointName)!!.status  != -1) {
+//                        //it has initial info, just got disconnected
+//                        endpoints.get(endpointName)!!.status  = 0
+//                        //initial info is there, so reload the gui
+                        serviceCallbacks?.refreshConnectionList(endpoints)
+//                    }
+
                     endpointIDNameMap.remove(endpointId) //so many ids will be generated in every second
-                    //endpointNameIDMap.remove(info.endpointName) //don't bother, device is limited
-                    serviceCallbacks?.refreshConnectionList(endpointNameConnected)
+                    endpointNameIDMap.remove(endpointName) //don't bother, device is limited
                 }
             }
         }
 
-    fun setConnection(endpointName: String) {
+    fun setConnection(endpointId: String) {
         Nearby.getConnectionsClient(context).requestConnection(
             "",
-            endpointNameIDMap[endpointName].toString(),
+            endpointId,
             connectionLifeCycleCallback
         )
         .addOnSuccessListener { unused: Void? ->
@@ -204,16 +245,16 @@ class ConnectionService : Service() {
                 when (result.status.statusCode) {
                     ConnectionsStatusCodes.STATUS_OK -> {
                         Log.d(TAG, "We're connected! Can now start sending and receiving data.")
-                        //endpointsConnected.add(endpointId)
-                        //for example, send the initial (must) information here
-                        //sendPayload(endpointId, "Random".toByteArray())
+                        sendPayload(endpointId, -1)
 
-//                        if (textMsg != null) {
-//                            sendPayload(endpointId, textMsg!!.toByteArray())
-//                            textMsg = null
+//                        val endpointName =  endpointIDNameMap[endpointId]
+//                        if (!endpoints.get(endpointName)!!.infosent) {
+//                            //initial info is not there, so need to send own info
+//                            sendPayload(endpointId, EndpointInfo.MsgInitInfo)
+//                            endpoints.get(endpointName)!!.infosent = true
 //                        }
-                        sendPayload(endpointId)
                     }
+
                     ConnectionsStatusCodes.STATUS_CONNECTION_REJECTED ->
                         Log.d(TAG,"The connection was rejected by one or both sides.")
                     ConnectionsStatusCodes.STATUS_ERROR ->
@@ -225,6 +266,9 @@ class ConnectionService : Service() {
 
             override fun onDisconnected(endpointId: String) {
                 Log.d(TAG,"We've been disconnected from this endpoint. No more data can be sent or received.")
+                val endpointName = endpointIDNameMap[endpointId]
+                endpoints.remove(endpointName)
+                serviceCallbacks?.refreshConnectionList(endpoints)
             }
         }
 
@@ -233,30 +277,65 @@ class ConnectionService : Service() {
 //        Nearby.getConnectionsClient(applicationContext).sendPayload(endpointId, payload)
 //    }
 
-    private fun sendPayload(endpointId: String) {
+    private fun sendPayload(endpointId: String, msgType: Int) {
+        when (msgType) {
+            EndpointInfo.MsgInitInfo -> {
+                val username = globalVariable.getUserName()
+                val userattrs = globalVariable.getAttributes()
+                val payload = Payload.fromBytes((EndpointInfo.MsgInitInfo.toString() + "|" +  username!! + "\t" + userattrs!!).toByteArray())
+                Nearby.getConnectionsClient(context).sendPayload(endpointId, payload)
+            }
+            EndpointInfo.MsgDirectory -> {
+                val fileDir = ""
+                val payload = Payload.fromBytes((EndpointInfo.MsgDirectory.toString() + "|" +  fileDir!!).toByteArray())
+                Nearby.getConnectionsClient(context).sendPayload(endpointId, payload)
+            }
+            EndpointInfo.MsgData -> {
+                val filedata = ""
+                //val payload = Payload.fromBytes((EndpointInfo.MsgDirectory.toString() + "|" +  fileDir!!).toByteArray())
+                //Nearby.getConnectionsClient(context).sendPayload(endpointId, payload)
+            }
+            EndpointInfo.MsgReward -> {
+                val reward = ""
+                val payload = Payload.fromBytes((EndpointInfo.MsgReward.toString() + "|" +  reward!!).toByteArray())
+                Nearby.getConnectionsClient(context).sendPayload(endpointId, payload)
+            }
+        }
+
         if (textMsg != null) {
-            val filenamePayload = Payload.fromBytes(encryptedFilename!!.toByteArray())
+//            val preferences = Preferences(this)
+//            val RLStringList = preferences.getRevokedMembers().toList()
+//            var RL = listOf<Int>()
+//            for(RLStr in RLStringList){
+//                RL+= RLStr.toInt()+1
+//            }
+//            this.publicKey.printPublicKey()
+//
+//            Log.i("encrypt", "policy: "+ policyMsg)
+//            val encryptedFilename = ReVo_ABE.encrypt(this.pairing
+//                ,this.publicKey, textMsg!!.toByteArray(), policyMsg, RL)
+//            val filenamePayload = Payload.fromBytes(encryptedFilename!!.toByteArray())
+
+            val filenamePayload = Payload.fromBytes(textMsg!!.toByteArray())
             Nearby.getConnectionsClient(context).sendPayload(endpointId, filenamePayload)
             textMsg = null
         }
         if (imageMsg != null) {
             val pfd = contentResolver.openFileDescriptor(imageMsg!!.toUri(), "r")
             val filePayload = Payload.fromFile(pfd!!)
+//
+//            val preferences = Preferences(this)
+//            val RLStringList = preferences.getRevokedMembers().toList()
+//            var RL = listOf<Int>()
+//            for(RLStr in RLStringList){
+//                RL+= RLStr.toInt()+1
+//            }
+//            this.publicKey.printPublicKey()
+//
+//            val encryptedFile = ReVo_ABE.encrypt(this.pairing
+//                ,this.publicKey,filePayload.asBytes(),policyMsg, RL)
+//            Nearby.getConnectionsClient(applicationContext).sendPayload(endpointId, Payload.fromBytes(encryptedFile.toByteArray())) //how to make fromFile()
 
-            /*
-            val preferences = Preferences(this)
-            val RLStringList = preferences.getRevokedMembers().toList()
-            var RL = listOf<Int>()
-            for(RLStr in RLStringList){
-                RL+= RLStr.toInt()+1
-            }
-            this.publicKey.printPublicKey()
-            var policyText : EditText  =findViewById(R.id.editTextPolicy)
-
-            ReVo_ABE.encrypt(this.pairing
-                ,this.publicKey,filePayload.asBytes(),policyText.text.toString(), RL)
-
-             */
             Nearby.getConnectionsClient(applicationContext).sendPayload(endpointId, filePayload)
             imageMsg = null
         }
@@ -268,9 +347,29 @@ class ConnectionService : Service() {
             Log.d(TAG, "Payload Received")
             when (payload.type) {
                 Payload.Type.BYTES -> {
-                    //rcvdFilename = String(payload.asBytes()!!, StandardCharsets.UTF_8)
-                    rcvdFilename = String(ReVo_ABE.decrypt(pairing,publicKey,
-                        Ciphertext(payload.asBytes()!!,pairing),privateKey) )
+                    rcvdFilename = String(payload.asBytes()!!, StandardCharsets.UTF_8)
+                    //val encryptedFilename = ReVo_ABE.decrypt(context.pairing,context.publicKey, rcvdFilename, context.privateKey)
+
+//                    val rcvdPayload = String(payload.asBytes()!!, StandardCharsets.UTF_8)
+//                    val msgType = (rcvdPayload.split("|")[0]).toInt()
+//                    val rcvdData = rcvdPayload.split("|")[1]
+//                    //rcvdFilename = String(ReVo_ABE.decrypt(pairing,publicKey, Ciphertext(payload.asBytes()!!,pairing),privateKey) )
+//                    when (msgType) {
+//                        EndpointInfo.MsgInitInfo -> {
+//                            val username = rcvdData.split("\t")[0]
+//                            val userattrs = rcvdData.split("\t")[1]
+//                            val endpointName = endpointIDNameMap[endpointId]
+//                            endpoints.get(endpointName)!!.status = 1 //connected
+//                            endpoints.get(endpointName)!!.username = username
+//                            endpoints.get(endpointName)!!.userattrs = userattrs
+//                            //initial info is there, so reload the gui
+//                            serviceCallbacks?.refreshConnectionList(endpoints)
+//                        }
+//                        EndpointInfo.MsgDirectory -> {
+//                        }
+//                        EndpointInfo.MsgReward -> {
+//                        }
+//                    }
                 }
                 Payload.Type.FILE -> {
                     // Add this to our tracking map, so that we can retrieve the payload later.
@@ -290,7 +389,7 @@ class ConnectionService : Service() {
                 if (payload != null && payload.type == Payload.Type.FILE) {
                     val isDone = processFilePayload(payloadId)
                     if (isDone) {
-                        Nearby.getConnectionsClient(context).disconnectFromEndpoint(endpointId)
+                        //Nearby.getConnectionsClient(context).disconnectFromEndpoint(endpointId)
                     }
                 }
             }
