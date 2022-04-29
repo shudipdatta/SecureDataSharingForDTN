@@ -83,6 +83,10 @@ class ConnectionActivity : AppCompatActivity(), ConnectionService.ServiceCallbac
                 switchImgAct(position)
             }
         }
+
+        //test: see if you can retrieve login information here by userid
+
+
     }
     private fun bootstrap(dirForPairingFile : String, keys: ByteArray){
 

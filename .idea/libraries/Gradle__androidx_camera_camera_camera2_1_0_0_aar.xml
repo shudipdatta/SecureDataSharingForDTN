@@ -1,16 +1,12 @@
 <component name="libraryTable">
   <library name="Gradle: androidx.camera:camera-camera2:1.0.0@aar">
     <ANNOTATIONS>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/6104a043a11b4a0ebb7c7ef329eb674d/transformed/jetified-camera-camera2-1.0.0/annotations.zip!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/cfc0a8e460c711f8ce71e1e9afafbccb/jetified-camera-camera2-1.0.0/annotations.zip!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/16a9cbf7e44221403f8f17cbf324e8fb/transformed/jetified-camera-camera2-1.0.0/annotations.zip!/" />
     </ANNOTATIONS>
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/6104a043a11b4a0ebb7c7ef329eb674d/transformed/jetified-camera-camera2-1.0.0/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/6104a043a11b4a0ebb7c7ef329eb674d/transformed/jetified-camera-camera2-1.0.0/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/6104a043a11b4a0ebb7c7ef329eb674d/transformed/jetified-camera-camera2-1.0.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/cfc0a8e460c711f8ce71e1e9afafbccb/jetified-camera-camera2-1.0.0/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/cfc0a8e460c711f8ce71e1e9afafbccb/jetified-camera-camera2-1.0.0/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/cfc0a8e460c711f8ce71e1e9afafbccb/jetified-camera-camera2-1.0.0/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/16a9cbf7e44221403f8f17cbf324e8fb/transformed/jetified-camera-camera2-1.0.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/16a9cbf7e44221403f8f17cbf324e8fb/transformed/jetified-camera-camera2-1.0.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/16a9cbf7e44221403f8f17cbf324e8fb/transformed/jetified-camera-camera2-1.0.0/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

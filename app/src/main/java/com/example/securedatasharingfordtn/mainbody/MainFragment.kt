@@ -15,6 +15,8 @@ import com.example.securedatasharingfordtn.SharedViewModel
 import com.example.securedatasharingfordtn.connection.ShudipActivity
 import com.example.securedatasharingfordtn.database.DTNDataSharingDatabase
 import com.example.securedatasharingfordtn.databinding.FragmentMainBinding
+import com.example.securedatasharingfordtn.message.MessageActivity
+import com.example.securedatasharingfordtn.profile.ProfileActivity
 
 class MainFragment : Fragment(){
 
@@ -42,6 +44,9 @@ class MainFragment : Fragment(){
 
         observeDirectToMainEvent(mainViewModel)
         startManageMembersActivity(mainViewModel)
+        startManageProfileActivity(mainViewModel)
+        startManageMessageActivity(mainViewModel)
+
         return binding.root
     }
 
@@ -61,14 +66,36 @@ class MainFragment : Fragment(){
     }
 
     private fun startManageMembersActivity(mainViewModel: MainViewModel){
-        mainViewModel.manageMembers.observe(viewLifecycleOwner,{
+        mainViewModel.manageMembers.observe(viewLifecycleOwner) {
             if (it == true) {
                 Log.i("mainbody", "To manage members.")
                 mainViewModel.doneSetupRevocationEvent()
                 val intent = Intent(requireContext(), MembersActivity::class.java)
                 startActivity(intent)
             }
-        })
+        }
+    }
+
+    private fun startManageProfileActivity(mainViewModel: MainViewModel){
+        mainViewModel.manageProfile.observe(viewLifecycleOwner) {
+            if (it == true) {
+                Log.i("mainbody", "To manage profile.")
+                mainViewModel.doneSetupProfileEvent()
+                val intent = Intent(requireContext(), ProfileActivity::class.java)
+                startActivity(intent)
+            }
+        }
+    }
+
+    private fun startManageMessageActivity(mainViewModel: MainViewModel){
+        mainViewModel.manageMessage.observe(viewLifecycleOwner) {
+            if (it == true) {
+                Log.i("mainbody", "To manage message.")
+                mainViewModel.doneSetupMessageEvent()
+                val intent = Intent(requireContext(), MessageActivity::class.java)
+                startActivity(intent)
+            }
+        }
     }
 
 

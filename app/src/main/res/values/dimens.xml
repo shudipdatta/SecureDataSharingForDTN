@@ -4,4 +4,5 @@
     <dimen name="main_imageview_width">200</dimen>
 
     <dimen name="margin_25">40dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 </resources>

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".profile.ProfileFragment">
+
+    <data>
+        <variable
+            name="ProfileViewModel"
+            type="com.example.securedatasharingfordtn.profile.ProfileViewModel"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/toolbar2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintLeft_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="User Profile"
+                app:titleTextColor="@android:color/white" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="80dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/textView13"
+                    android:layout_width="84dp"
+                    android:layout_height="67dp"
+                    android:text="UserName"
+                    android:textAlignment="viewStart" />
+
+                <TextView
+                    android:id="@+id/textView14"
+                    android:layout_width="wrap_content"
+                    android:layout_height="67dp"
+                    android:text="\t" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/textView12"
+                    android:layout_width="124dp"
+                    android:layout_height="67dp"
+                    android:text="Name" />
+
+                <TextView
+                    android:id="@+id/textView11"
+                    android:layout_width="wrap_content"
+                    android:layout_height="67dp"
+                    android:text="\t"
+                    tools:ignore="SpeakableTextPresentCheck" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/textView15"
+                    android:layout_width="117dp"
+                    android:layout_height="67dp"
+                    android:text="Attributes" />
+
+                <TextView
+                    android:id="@+id/textView16"
+                    android:layout_width="wrap_content"
+                    android:layout_height="67dp"
+                    android:text="\t" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/textView17"
+                    android:layout_width="114dp"
+                    android:layout_height="67dp"
+                    android:text="Interests" />
+
+                <TextView
+                    android:id="@+id/textView18"
+                    android:layout_width="wrap_content"
+                    android:layout_height="67dp"
+                    android:text="\t" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/textView21"
+                    android:layout_width="129dp"
+                    android:layout_height="67dp"
+                    android:text="Mission ID" />
+
+                <TextView
+                    android:id="@+id/textView22"
+                    android:layout_width="wrap_content"
+                    android:layout_height="67dp"
+                    android:text="\t" />
+            </TableRow>
+        </TableLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

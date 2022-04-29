@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".connection.ImageActivity">
-
+<!--
     <TableLayout
         android:id="@+id/image_activity_from_main"
         android:layout_width="match_parent"
@@ -90,7 +90,7 @@
                 android:verticalSpacing="5dp" />
         </TableRow>
     </TableLayout>
-
+-->
     <LinearLayout
         android:id="@+id/image_activity_from_con"
         android:layout_width="match_parent"

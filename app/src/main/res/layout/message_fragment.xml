@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".message.MessageFragment">
+
+    <data>
+        <variable
+            name="MessageViewModel"
+            type="com.example.securedatasharingfordtn.message.MessageViewModel"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TableLayout
+            android:id="@+id/message_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Button
+                    android:id="@+id/capture_photo_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Capture Photo"
+                    app:icon="@android:drawable/ic_menu_camera" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:paddingLeft="10dp"
+                    android:text="Own Photos"
+                    android:textColor="#2C44CC" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1">
+
+                <GridView
+                    android:id="@+id/gridview_own"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:columnWidth="100dp"
+                    android:horizontalSpacing="5dp"
+                    android:numColumns="auto_fit"
+                    android:stretchMode="columnWidth"
+                    android:verticalSpacing="5dp" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:paddingLeft="10dp"
+                    android:text="Collected Photos"
+                    android:textColor="#2C44CC" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1">
+
+                <GridView
+                    android:id="@+id/gridview_collected"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:columnWidth="100dp"
+                    android:horizontalSpacing="5dp"
+                    android:numColumns="auto_fit"
+                    android:stretchMode="columnWidth"
+                    android:verticalSpacing="5dp" />
+            </TableRow>
+        </TableLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

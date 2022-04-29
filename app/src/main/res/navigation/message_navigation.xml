@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/message_navigation"
+    app:startDestination="@id/messageFragment">
+
+    <fragment
+        android:id="@+id/messageFragment"
+        android:name="com.example.securedatasharingfordtn.message.MessageFragment"
+        android:label="message_fragment"
+        tools:layout="@layout/message_fragment" >
+        <action
+            android:id="@+id/action_messageFragment_to_deleteMessageFragment"
+            app:destination="@id/deleteMessageFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/deleteMessageFragment"
+        android:name="com.example.securedatasharingfordtn.message.DeleteMessageFragment"
+        android:label="fragment_delete_message"
+        tools:layout="@layout/fragment_delete_message" />
+</navigation>

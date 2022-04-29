@@ -7,6 +7,7 @@ import com.example.securedatasharingfordtn.database.LoginUserData
 private const val MEMBERS = "members"
 private const val REVOKED = "revoked"
 private const val POLICY = "policy"
+private const val USERID = "userid" //test
 private const val USERNAME = "username" //test
 private const val USERATTRS = "userattrs" //test
 
@@ -28,6 +29,11 @@ class Preferences(context: Context) {
     }
 
     //test
+    fun getUserId(): Int? = preferences.getInt(USERID, 0)
+    fun setUserId(userid: Int){
+        preferences.edit().putInt(USERID,userid).apply()
+    }
+
     fun getUserName(): String? = preferences.getString(USERNAME,"")
     fun setUserName(username: String){
         preferences.edit().putString(USERNAME,username).apply()
@@ -38,5 +44,4 @@ class Preferences(context: Context) {
     fun setUserAttrs(userattrs: String){
         preferences.edit().putString(USERATTRS,userattrs).apply()
     }
-
 }

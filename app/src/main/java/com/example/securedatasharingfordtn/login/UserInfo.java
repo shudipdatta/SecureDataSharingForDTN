@@ -9,6 +9,7 @@ public class UserInfo {
     private String username;
     private String password;
     private List<String> attributes;
+    private List<String> interests;
     private String firstname;
     private String lastname;
     private String registerationTime;
@@ -67,8 +68,24 @@ public class UserInfo {
         return sb.substring(0, sb.length()-1);
     }
 
+    public String getInterestsString() {
+        StringBuilder sb = new StringBuilder();
+        for(String interest:interests) {
+            sb.append(interest.trim());
+            sb.append(",");
+        }
+        if (sb.length()<=0) {
+            return "";
+        }
+        return sb.substring(0, sb.length()-1);
+    }
+
     public List<String> getAttributes(){
         return this.attributes;
+    }
+
+    public List<String> getInterests(){
+        return this.interests;
     }
 
     public int getUserID() {

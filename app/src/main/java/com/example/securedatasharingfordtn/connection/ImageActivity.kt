@@ -46,12 +46,12 @@ class ImageActivity : AppCompatActivity() {
     private lateinit var selectedFolder: String
 
     private lateinit var gridView_own: GridView
-    private lateinit var photolist_own: ArrayList<ImageGridItem>
-    private lateinit var adapter_own: GridViewAdapter
+//    private lateinit var photolist_own: ArrayList<ImageGridItem>
+//    private lateinit var adapter_own: GridViewAdapter
 
     private lateinit var gridView_collected: GridView
-    private lateinit var photolist_collected: ArrayList<ImageGridItem>
-    private lateinit var adapter_collected: GridViewAdapter
+//    private lateinit var photolist_collected: ArrayList<ImageGridItem>
+//    private lateinit var adapter_collected: GridViewAdapter
 
     private lateinit var listview: ListView
     private lateinit var photolist: ArrayList<ImageListItem>
@@ -77,40 +77,40 @@ class ImageActivity : AppCompatActivity() {
 
         if (PARENT_ACTIVITY == MAIN_ACTIVITY) {
 
-            findViewById<View>(R.id.image_activity_from_main).visibility = View.VISIBLE
+//            findViewById<View>(R.id.image_activity_from_main).visibility = View.VISIBLE
             findViewById<View>(R.id.image_activity_from_con).visibility = View.GONE
             //capturePhotoButton.visibility = Button.VISIBLE
             //sendPhotoTextview.visibility = TextView.GONE
 
-            //for showing captured photos
-            gridView_own = findViewById<View>(R.id.gridview_own) as GridView
-            photolist_own = getGridItemData(OWN_IMAGE_FOLDER)
-            adapter_own = GridViewAdapter(this, R.layout.grid_image_layout, photolist_own)
-            gridView_own.adapter = adapter_own
+//            //for showing captured photos
+//            gridView_own = findViewById<View>(R.id.gridview_own) as GridView
+//            photolist_own = getGridItemData(OWN_IMAGE_FOLDER)
+//            adapter_own = GridViewAdapter(this, R.layout.grid_image_layout, photolist_own)
+//            gridView_own.adapter = adapter_own
+//
+//            //for showing collected photos
+//            gridView_collected = findViewById<View>(R.id.gridview_collected) as GridView
+//            photolist_collected = getGridItemData(COLLECTED_IMAGE_FOLDER)
+//            adapter_collected = GridViewAdapter(this, R.layout.grid_image_layout, photolist_collected)
+//            gridView_collected.adapter = adapter_collected
 
-            //for showing collected photos
-            gridView_collected = findViewById<View>(R.id.gridview_collected) as GridView
-            photolist_collected = getGridItemData(COLLECTED_IMAGE_FOLDER)
-            adapter_collected = GridViewAdapter(this, R.layout.grid_image_layout, photolist_collected)
-            gridView_collected.adapter = adapter_collected
-
-            //selecting an image from gridview
-            gridView_own.onItemClickListener = object : AdapterView.OnItemClickListener {
-                override fun onItemClick( parent: AdapterView<*>, view: View, position: Int, id: Long ) {
-                    val item = parent.getItemAtPosition(position)
-                    switchFullImgAct(position, item as ImageGridItem, OWN_IMAGE_FOLDER)
-                }
-            }
-            gridView_collected.onItemClickListener = object : AdapterView.OnItemClickListener {
-                override fun onItemClick( parent: AdapterView<*>, view: View, position: Int, id: Long ) {
-                    val item = parent.getItemAtPosition(position)
-                    switchFullImgAct(position, item as ImageGridItem, COLLECTED_IMAGE_FOLDER)
-                }
-            }
+//            //selecting an image from gridview
+//            gridView_own.onItemClickListener = object : AdapterView.OnItemClickListener {
+//                override fun onItemClick( parent: AdapterView<*>, view: View, position: Int, id: Long ) {
+//                    val item = parent.getItemAtPosition(position)
+//                    switchFullImgAct(position, item as ImageGridItem, OWN_IMAGE_FOLDER)
+//                }
+//            }
+//            gridView_collected.onItemClickListener = object : AdapterView.OnItemClickListener {
+//                override fun onItemClick( parent: AdapterView<*>, view: View, position: Int, id: Long ) {
+//                    val item = parent.getItemAtPosition(position)
+//                    switchFullImgAct(position, item as ImageGridItem, COLLECTED_IMAGE_FOLDER)
+//                }
+//            }
         }
 
         else if (PARENT_ACTIVITY == CONNECTION_ACTIVITY) {
-            findViewById<View>(R.id.image_activity_from_main).visibility = View.GONE
+ //           findViewById<View>(R.id.image_activity_from_main).visibility = View.GONE
             findViewById<View>(R.id.image_activity_from_con).visibility = View.VISIBLE
 
             //capturePhotoButton.visibility = Button.GONE
@@ -153,16 +153,16 @@ class ImageActivity : AppCompatActivity() {
     }
 
     /* Handle selected image */
-    // if grid view
-    private fun switchFullImgAct(position: Int, item: ImageGridItem, folder: String) {
-        selectedGridviewPosition = position
-        selectedFolder = folder
-        val full_img_intent = Intent(this, SelectedImageActivity::class.java)
-        full_img_intent.putExtra("title", item.title)
-        full_img_intent.putExtra("folder", folder)
-        //full_img_intent.putExtra("image", item.image)
-        startActivityForResult(full_img_intent, DELETE_IMAGE_ACTIVITY_REQUEST_CODE)
-    }
+//    // if grid view
+//    private fun switchFullImgAct(position: Int, item: ImageGridItem, folder: String) {
+//        selectedGridviewPosition = position
+//        selectedFolder = folder
+//        val full_img_intent = Intent(this, SelectedImageActivity::class.java)
+//        full_img_intent.putExtra("title", item.title)
+//        full_img_intent.putExtra("folder", folder)
+//        //full_img_intent.putExtra("image", item.image)
+//        startActivityForResult(full_img_intent, DELETE_IMAGE_ACTIVITY_REQUEST_CODE)
+//    }
     // if list view
     private fun sendImageAndBack(position: Int, item: ImageListItem) {
         val intent = Intent()
@@ -240,9 +240,9 @@ class ImageActivity : AppCompatActivity() {
                     //photolist_own.clear()
                     //photolist_own.addAll(getData(OWN_IMAGE_FOLDER))
                     //adapter_own.notifyDataSetChanged();
-                    val rotatedImage = getRotatedImage(resizedBitmap, resizedFile.path)
-                    photolist_own.add(ImageGridItem(rotatedImage!!, resizedFileName))
-                    adapter_own.notifyDataSetChanged();
+//                    val rotatedImage = getRotatedImage(resizedBitmap, resizedFile.path)
+//                    photolist_own.add(ImageGridItem(rotatedImage!!, resizedFileName))
+//                    adapter_own.notifyDataSetChanged();
                 }
             }
             else { // Result was a failure
@@ -256,13 +256,13 @@ class ImageActivity : AppCompatActivity() {
                 val isDeleted = data!!.getBooleanExtra("isDeleted", false)
                 if (isDeleted) {
                     if (PARENT_ACTIVITY == MAIN_ACTIVITY) {
-                        if (selectedFolder == OWN_IMAGE_FOLDER) {
-                            photolist_own.removeAt(selectedGridviewPosition)
-                            adapter_own.notifyDataSetChanged();
-                        } else if (selectedFolder == COLLECTED_IMAGE_FOLDER) {
-                            photolist_collected.removeAt(selectedGridviewPosition)
-                            adapter_collected.notifyDataSetChanged();
-                        }
+//                        if (selectedFolder == OWN_IMAGE_FOLDER) {
+//                            photolist_own.removeAt(selectedGridviewPosition)
+//                            adapter_own.notifyDataSetChanged();
+//                        } else if (selectedFolder == COLLECTED_IMAGE_FOLDER) {
+//                            photolist_collected.removeAt(selectedGridviewPosition)
+//                            adapter_collected.notifyDataSetChanged();
+//                        }
                     }
                 }
             }
@@ -283,7 +283,7 @@ class ImageActivity : AppCompatActivity() {
 
         return mediaStorageDir.listFiles()
     }
-
+/*
     // Prepare data for gridview
     private fun getGridItemData(folder: String): ArrayList<ImageGridItem> {
         val imageGridItems: ArrayList<ImageGridItem> = ArrayList()
@@ -310,7 +310,7 @@ class ImageActivity : AppCompatActivity() {
         }
         return imageGridItems
     }
-
+*/
     // Prepare data for listview
     private fun getListItemData(): ArrayList<ImageListItem> {
         val ImageListItem: ArrayList<ImageListItem> = ArrayList()

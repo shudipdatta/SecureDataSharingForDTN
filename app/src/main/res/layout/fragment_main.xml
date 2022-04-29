@@ -22,6 +22,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="16dp"
+            android:onClick="@{() -> MainViewModel.setupMessage()}"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toStartOf="@+id/imageView2"
             app:layout_constraintHorizontal_bias="0.5"
@@ -58,12 +59,13 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="8dp"
+            android:onClick="@{() -> MainViewModel.setupProfile()}"
             app:layout_constraintDimensionRatio="h,1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/imageView3"
             app:layout_constraintTop_toBottomOf="@+id/imageView2"
-            app:srcCompat="@drawable/interest" />
+            app:srcCompat="@drawable/profile" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>

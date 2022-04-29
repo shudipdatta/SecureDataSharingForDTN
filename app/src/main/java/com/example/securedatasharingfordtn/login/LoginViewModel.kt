@@ -21,6 +21,7 @@ class LoginViewModel
 
     private var keys: ByteArray = byteArrayOf()
     var members: String = ""
+    var userid: String = "" //test
     var userattrs: String = "" //test
     private lateinit var user: LoginUserData
 
@@ -72,7 +73,6 @@ class LoginViewModel
     //try to login
     //login error snackbar indicator functions
     fun doneSetupOKSnackbar(){
-
         runBlocking {
             fetchUserFromServer()
 
@@ -136,7 +136,8 @@ class LoginViewModel
                     update(tryUser)
                     user = tryUser
                     members = user.members
-                    userattrs = user.attributes
+                    userid = user.userid.toString()
+                    userattrs = user.attributes //test
                 }
 
                 Log.i("Login", "find user in the database")
@@ -199,7 +200,10 @@ class LoginViewModel
                             username = userInfo.username,
                             password = userInfo.password,
                             mission = missionCode.value!!.toLong(),
+                            firstname = userInfo.firstname,
+                            lastname = userInfo.lastname,
                             attributes = userInfo.attributesString,
+                            interests = userInfo.interestsString,
                             recentLoginTimeMilli = System.currentTimeMillis(),
                             registerationTime = rt,
                             expirationDate = et,
@@ -238,7 +242,9 @@ class LoginViewModel
 
     private suspend fun insert(data: LoginUserData) {
         withContext(Dispatchers.IO) {
-            database.insert(data)
+            database.clear()
+            userid = database.insert(data).toString()
+            //Log.i("Setup UserID", userid.toString())
         }
     }
 

@@ -215,6 +215,7 @@ class LoginFragment : Fragment()  {
                 preferences.setMembers(loginViewModel.members)
 
                 //test
+                preferences.setUserId(loginViewModel.getUser().userid)
                 preferences.setUserName(loginViewModel.getUser().username)//.getUser().firstname + " " + loginViewModel.getUser().lastname)
                 preferences.setUserAttrs(loginViewModel.userattrs)
 

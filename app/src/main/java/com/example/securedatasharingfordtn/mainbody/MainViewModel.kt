@@ -43,6 +43,14 @@ class MainViewModel(
     val manageMembers: LiveData<Boolean>
         get() = _manageMembers
 
+    private var _manageProfile = MutableLiveData<Boolean>()
+    val manageProfile: LiveData<Boolean>
+        get() = _manageProfile
+
+    private var _manageMessage = MutableLiveData<Boolean>()
+    val manageMessage: LiveData<Boolean>
+        get() = _manageMessage
+
 
     //login error snackbar indicator functions
     fun doneDirectToConnectionEvent(){
@@ -58,6 +66,22 @@ class MainViewModel(
 
     fun doneSetupRevocationEvent(){
         _manageMembers.value = false
+    }
+
+    fun setupProfile() {
+        _manageProfile.value = true
+    }
+
+    fun doneSetupProfileEvent() {
+        _manageProfile.value = false
+    }
+
+    fun setupMessage() {
+        _manageMessage.value = true
+    }
+
+    fun doneSetupMessageEvent() {
+        _manageMessage.value = false
     }
 
 

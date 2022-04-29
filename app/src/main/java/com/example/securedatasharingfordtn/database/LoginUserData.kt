@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "login_user_data_table")
 data class LoginUserData(
     @PrimaryKey(autoGenerate = true)
-    var userId: Int = 0,
+    var userid: Int = 0,
 
     @ColumnInfo(name = "user_name")
     var username: String="",
@@ -26,11 +26,14 @@ data class LoginUserData(
     @ColumnInfo(name = "user_attribute")
     var attributes: String="",
 
+    @ColumnInfo(name = "user_interest")
+    var interests: String="",
+
     @ColumnInfo(name = "recent_login_time")
     var recentLoginTimeMilli: Long = System.currentTimeMillis(),
 
     @ColumnInfo(name = "user_register_time")
-    val registerationTime: Long = System.currentTimeMillis(),
+    var registerationTime: Long = System.currentTimeMillis(),
 
     @ColumnInfo(name = "user_expiration_time")
     var expirationDate: Long = 0L,

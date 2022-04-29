@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.securedatasharingfordtn">
     <!-- Declare features -->
     <uses-feature android:name="android.hardware.camera.any" /> <!-- Declare permissions -->
@@ -33,7 +34,7 @@
     </queries>
 
     <application
-        android:name="com.example.securedatasharingfordtn.GlobalApp"
+        android:name=".GlobalApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="Secure Data Sharing"
@@ -42,18 +43,25 @@
         android:theme="@style/Theme.SecureDataSharingForDTN"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".profile.ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".message.MessageActivity"
+            android:exported="false" />
+        <activity
             android:name=".mainbody.MembersActivity"
             android:exported="true" />
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".connection.SelectedImageActivity" />
         <activity android:name=".connection.ShudipActivity" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.securedatasharingfordtn.fileprovider"
