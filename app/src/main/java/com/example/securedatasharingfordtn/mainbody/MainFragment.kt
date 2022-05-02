@@ -12,7 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.securedatasharingfordtn.R
 import com.example.securedatasharingfordtn.SharedViewModel
-import com.example.securedatasharingfordtn.connection.ShudipActivity
+import com.example.securedatasharingfordtn.connection.ConnectionActivity
 import com.example.securedatasharingfordtn.database.DTNDataSharingDatabase
 import com.example.securedatasharingfordtn.databinding.FragmentMainBinding
 import com.example.securedatasharingfordtn.message.MessageActivity
@@ -42,7 +42,7 @@ class MainFragment : Fragment(){
         binding.mainViewModel = mainViewModel
         binding.lifecycleOwner = this
 
-        observeDirectToMainEvent(mainViewModel)
+        startManageConnectionActivity(mainViewModel)
         startManageMembersActivity(mainViewModel)
         startManageProfileActivity(mainViewModel)
         startManageMessageActivity(mainViewModel)
@@ -50,14 +50,12 @@ class MainFragment : Fragment(){
         return binding.root
     }
 
-
-
-    private fun observeDirectToMainEvent(mainViewModel: MainViewModel){
-        mainViewModel.directToMainEvent.observe(viewLifecycleOwner, Observer {
+    private fun startManageConnectionActivity(mainViewModel: MainViewModel){
+        mainViewModel.manageConnection.observe(viewLifecycleOwner, Observer {
             if (it == true) { // Observed state is true.
-                Log.i("mainbody","is going to redirect to the connection activity" + sharedModel.getPairDir())
-                mainViewModel.doneDirectToConnectionEvent()
-                val intent = Intent(requireContext(), ShudipActivity::class.java)
+                Log.i("mainbody","to manage connection")
+                mainViewModel.doneSetupConnectionEvent()
+                val intent = Intent(requireContext(), ConnectionActivity::class.java)
                 intent.putExtra("keys", sharedModel.getKeys());
                 intent.putExtra("pairingDir", sharedModel.getPairDir());
                 startActivity(intent)
@@ -97,8 +95,4 @@ class MainFragment : Fragment(){
             }
         }
     }
-
-
-
-
 }

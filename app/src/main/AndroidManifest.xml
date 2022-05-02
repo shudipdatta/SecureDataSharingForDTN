@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.securedatasharingfordtn">
+
     <!-- Declare features -->
     <uses-feature android:name="android.hardware.camera.any" /> <!-- Declare permissions -->
     <uses-permission android:name="android.permission.CAMERA" />
@@ -42,6 +43,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SecureDataSharingForDTN"
         android:usesCleartextTraffic="true">
+        <service
+            android:name=".connection.NearbyService"
+            android:enabled="true"
+            android:exported="true"></service>
+
+        <activity
+            android:name=".connection.ConnectionActivity"
+            android:exported="false" />
         <activity
             android:name=".profile.ProfileActivity"
             android:exported="false" />
@@ -78,7 +87,7 @@
             android:name="com.google.android.nearby.messages.API_KEY"
             android:value="AIzaSyBZoMLLq2JLUSvqgoLz6P8BI887i50zgUc" />
 
-        <activity android:name=".connection.ConnectionActivity" />
+        <activity android:name=".connection.ConnectionActivity_v1" />
 
         <service
             android:name=".connection.ConnectionService"

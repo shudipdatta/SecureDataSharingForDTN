@@ -167,7 +167,7 @@ class ImageActivity : AppCompatActivity() {
     private fun sendImageAndBack(position: Int, item: ImageListItem) {
         val intent = Intent()
         intent.putExtra("fileName", item.title)
-        intent.putExtra("folder", item.folder)
+        //intent.putExtra("folder", item.folder)
         setResult(RESULT_OK, intent)
         finish()
     }
@@ -319,7 +319,7 @@ class ImageActivity : AppCompatActivity() {
             val bitmap = BitmapFactory.decodeFile(img.path)
             if(!img.name.equals(photoName)) { //don't want to show default photo when taking
                 val rotatedImage = getRotatedImage(bitmap, img.path)
-                ImageListItem.add(ImageListItem(rotatedImage!!, img.name, false, 10.0, OWN_IMAGE_FOLDER))
+                //ImageListItem.add(ImageListItem(rotatedImage!!, img.name, false, 10.0, OWN_IMAGE_FOLDER))
             }
         }
         imgs = getDirectoryFileUri(COLLECTED_IMAGE_FOLDER)
@@ -327,7 +327,7 @@ class ImageActivity : AppCompatActivity() {
             val bitmap = BitmapFactory.decodeFile(img.path)
             if(!img.name.equals(photoName)) { //don't want to show default photo when taking
                 val rotatedImage = getRotatedImage(bitmap, img.path)
-                ImageListItem.add(ImageListItem(rotatedImage!!, img.name, false, 5.0, COLLECTED_IMAGE_FOLDER))
+                //ImageListItem.add(ImageListItem(rotatedImage!!, img.name, false, 5.0, COLLECTED_IMAGE_FOLDER))
             }
         }
         return ImageListItem

@@ -24,10 +24,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.securedatasharingfordtn.R
-import com.example.securedatasharingfordtn.connection.ImageActivity
 import com.example.securedatasharingfordtn.database.DTNDataSharingDatabase
 import com.example.securedatasharingfordtn.databinding.MessageFragmentBinding
-import kotlinx.android.synthetic.main.message_fragment.*
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -35,8 +33,6 @@ import java.io.FileOutputStream
 class MessageFragment : Fragment() {
 
     companion object {
-        fun newInstance() = MessageFragment()
-
         private const val CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1
         private const val OWN_IMAGE_FOLDER = "own_images"
         private const val COLLECTED_IMAGE_FOLDER = "collected_images"

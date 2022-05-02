@@ -3,15 +3,11 @@ package com.example.securedatasharingfordtn.message
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.setupActionBarWithNavController
-import com.example.securedatasharingfordtn.R
 import com.example.securedatasharingfordtn.databinding.MessageActivityBinding
 
 class MessageActivity : AppCompatActivity() {
@@ -23,11 +19,6 @@ class MessageActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        setContentView(R.layout.message_activity)
-//        if (savedInstanceState == null) {
-//            flag = true
-//        }
-
         checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, READ_PERMISSION_CODE)
     }
 
@@ -37,13 +28,6 @@ class MessageActivity : AppCompatActivity() {
     }
 
     private fun createFragment() {
-//        if (flag) {
-//            supportFragmentManager.beginTransaction()
-//                .replace(R.id.container, MessageFragment.newInstance())
-//                .commitNow()
-//        }
-
-
         val binding = MessageActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -54,7 +38,6 @@ class MessageActivity : AppCompatActivity() {
 //        navController = navHostFragment.navController
 //        // Make sure actions in the ActionBar get propagated to the NavController
 //        setupActionBarWithNavController(navController)
-
     }
 
     private fun goBack() {

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".connection.ConImageFragment">
+
+    <data>
+        <variable
+            name="ConnectionViewModel"
+            type="com.example.securedatasharingfordtn.connection.ConnectionViewModel"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/send_photo_textview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:paddingLeft="10dp"
+                android:text="Tap photo to send"
+                android:textAlignment="center"
+                android:background="#E5F7FD"
+                android:textColor="#1B1F37"
+                android:textSize="18sp" />
+
+            <ListView
+                android:id="@+id/image_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="#000"
+                android:dividerHeight="1dp"
+                android:footerDividersEnabled="false"
+                android:headerDividersEnabled="false" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

@@ -1,6 +1,7 @@
 package com.example.securedatasharingfordtn.connection
 import android.app.Activity
 import android.content.Context
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
@@ -21,11 +22,11 @@ class ListViewAdapter(
         var row: View? = convertView
         var holder: ViewHolder? = null
         if (row == null) {
-            val inflater = (context as Activity).layoutInflater
+            val inflater = LayoutInflater.from(context) // (context as Activity).layoutInflater
             row = inflater.inflate(layoutResourceId, parent, false)
             holder = ViewHolder()
             holder.title = row.findViewById(R.id.list_title)
-            holder.is_trending = row.findViewById(R.id.list_is_trending)
+            holder.caption = row.findViewById(R.id.list_caption)
             holder.similarity = row.findViewById(R.id.list_similarity)
             holder.image = row.findViewById(R.id.list_image) as ImageView
             row.tag = holder
@@ -35,7 +36,7 @@ class ListViewAdapter(
 
         val item: ImageListItem = data[position]
         holder!!.title?.text = "Photo ID:\t" + item.title
-        holder!!.is_trending?.text = "Is Trending:\t" + item.is_trending.toString()
+        holder!!.caption?.text = "Caption:\t" + item.caption
         holder!!.similarity?.text = "Similarity:\t" + item.similarity.toString()
         holder.image?.setImageBitmap(item.image)
         //folder = item.folder
@@ -45,7 +46,7 @@ class ListViewAdapter(
     internal class ViewHolder {
         var image: ImageView? = null
         var title: TextView? = null
-        var is_trending: TextView? = null
+        var caption: TextView? = null
         var similarity: TextView? = null
         //var folder: String? = null
     }

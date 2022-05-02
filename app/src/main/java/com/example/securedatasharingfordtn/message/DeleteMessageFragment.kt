@@ -13,16 +13,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.example.securedatasharingfordtn.R
 import com.example.securedatasharingfordtn.database.DTNDataSharingDatabase
 import com.example.securedatasharingfordtn.databinding.FragmentDeleteMessageBinding
 import java.io.File
 
 class DeleteMessageFragment : Fragment() {
-    companion object {
-        fun newInstance() = DeleteMessageFragment()
-    }
-
     private lateinit var application: Application
     private lateinit var binding: FragmentDeleteMessageBinding
     private lateinit var messageViewModel: MessageViewModel
@@ -58,7 +55,7 @@ class DeleteMessageFragment : Fragment() {
                 image.delete()
             }
             messageViewModel.deleteImage(image.name)
-            activity?.supportFragmentManager?.popBackStack()
+            findNavController().popBackStack()
         }
         return binding.root
     }

@@ -40,14 +40,18 @@
 
                 <TableRow
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
+                    android:layout_height="match_parent"
+                    android:padding="2dp" >
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom"
                         android:padding="10dp"
-                        android:text="Title" />
+                        android:text="Title"
+                        android:background="#E5F7FD"
+                        android:textColor="#1B1F37"
+                        android:textSize="18sp" />
 
                     <TextView
                         android:id="@+id/selected_title"
@@ -59,14 +63,18 @@
 
                 <TableRow
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
+                    android:layout_height="match_parent"
+                    android:padding="2dp"  >
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom"
                         android:padding="10dp"
-                        android:text="Caption" />
+                        android:text="Caption"
+                        android:background="#E5F7FD"
+                        android:textColor="#1B1F37"
+                        android:textSize="18sp" />
 
                     <TextView
                         android:id="@+id/selected_caption"
@@ -78,14 +86,18 @@
 
                 <TableRow
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
+                    android:layout_height="match_parent"
+                    android:padding="2dp"  >
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom"
                         android:padding="10dp"
-                        android:text="Keywords" />
+                        android:text="Keywords"
+                        android:background="#E5F7FD"
+                        android:textColor="#1B1F37"
+                        android:textSize="18sp" />
 
                     <TextView
                         android:id="@+id/selected_keywords"

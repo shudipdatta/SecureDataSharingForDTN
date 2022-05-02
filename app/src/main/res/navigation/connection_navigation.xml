@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/connection_navigation"
+    app:startDestination="@id/connectionFragment">
+
+    <fragment
+        android:id="@+id/connectionFragment"
+        android:name="com.example.securedatasharingfordtn.connection.ConnectionFragment"
+        android:label="connection_fragment"
+        tools:layout="@layout/connection_fragment" >
+        <action
+            android:id="@+id/action_connectionFragment_to_conImageFragment"
+            app:destination="@id/conImageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/conImageFragment"
+        android:name="com.example.securedatasharingfordtn.connection.ConImageFragment"
+        android:label="fragment_con_image"
+        tools:layout="@layout/fragment_con_image" />
+</navigation>

@@ -103,7 +103,7 @@ class ShudipActivity : AppCompatActivity() {
 
     /** Called when the user taps the "Connected Device" button  */
     private fun switchConAct() {
-        val con_act_intent = Intent(this, ConnectionActivity::class.java)
+        val con_act_intent = Intent(this, ConnectionActivity_v1::class.java)
         con_act_intent.putExtra("keys", sharedKeys);
         con_act_intent.putExtra("pairingDir", sharedDir);
 
