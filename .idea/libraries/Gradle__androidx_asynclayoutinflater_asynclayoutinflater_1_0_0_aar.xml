@@ -1,13 +1,17 @@
 <component name="libraryTable">
   <library name="Gradle: androidx.asynclayoutinflater:asynclayoutinflater:1.0.0@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/063a1de3be79f46e7390777b2a65b556/transformed/asynclayoutinflater-1.0.0/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/063a1de3be79f46e7390777b2a65b556/transformed/asynclayoutinflater-1.0.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/063a1de3be79f46e7390777b2a65b556/transformed/asynclayoutinflater-1.0.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/26b2e4a4025879c52dc0be273876e6b1/transformed/asynclayoutinflater-1.0.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/da48366575d7d01f4a9ad34aba704442/transformed/asynclayoutinflater-1.0.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/50584c3cae11133fe5e9fa72e131980f/transformed/asynclayoutinflater-1.0.0/res" />
+      <root url="file://$PROJECT_DIR$/../Thesis_docs/ImageCaptioningAndroid2 - Copy/android_apps/google_tflite_demo/demo/caches/transforms-3/063a1de3be79f46e7390777b2a65b556/transformed/asynclayoutinflater-1.0.0/res" />
+      <root url="file://$PROJECT_DIR$/../Thesis_docs/ImageCaptioningAndroid2 - Copy/android_apps/google_tflite_demo/demo/caches/transforms-3/063a1de3be79f46e7390777b2a65b556/transformed/asynclayoutinflater-1.0.0/AndroidManifest.xml" />
+      <root url="jar://$PROJECT_DIR$/../Thesis_docs/ImageCaptioningAndroid2 - Copy/android_apps/google_tflite_demo/demo/caches/transforms-3/063a1de3be79f46e7390777b2a65b556/transformed/asynclayoutinflater-1.0.0/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.asynclayoutinflater/asynclayoutinflater/1.0.0/ac4d50701fce5c88dcc514f58e695cd32f05134c/asynclayoutinflater-1.0.0-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../Thesis_docs/ImageCaptioningAndroid2 - Copy/android_apps/google_tflite_demo/demo/caches/modules-2/files-2.1/androidx.asynclayoutinflater/asynclayoutinflater/1.0.0/ac4d50701fce5c88dcc514f58e695cd32f05134c/asynclayoutinflater-1.0.0-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

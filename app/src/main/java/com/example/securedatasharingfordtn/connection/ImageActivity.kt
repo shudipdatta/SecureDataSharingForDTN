@@ -166,7 +166,7 @@ class ImageActivity : AppCompatActivity() {
     // if list view
     private fun sendImageAndBack(position: Int, item: ImageListItem) {
         val intent = Intent()
-        intent.putExtra("fileName", item.title)
+        intent.putExtra("fileName", item.imageid)
         //intent.putExtra("folder", item.folder)
         setResult(RESULT_OK, intent)
         finish()

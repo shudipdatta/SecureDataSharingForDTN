@@ -2,14 +2,15 @@ package com.example.securedatasharingfordtn
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.example.securedatasharingfordtn.database.LoginUserData
 
 private const val MEMBERS = "members"
 private const val REVOKED = "revoked"
 private const val POLICY = "policy"
-private const val USERID = "userid" //test
-private const val USERNAME = "username" //test
-private const val USERATTRS = "userattrs" //test
+private const val MISSION = "mission"
+private const val USERID = "userid"
+private const val USERNAME = "username"
+private const val USERATTRS = "userattrs"
+private const val USERINTERESTS = "userinterests"
 
 class Preferences(context: Context) {
     private val preferences: SharedPreferences = context.getSharedPreferences("data", Context.MODE_PRIVATE)
@@ -28,7 +29,11 @@ class Preferences(context: Context) {
         preferences.edit().putString(POLICY,policy).apply()
     }
 
-    //test
+    fun getMission(): String? = preferences.getString(MISSION, "")
+    fun setMission(mission: String){
+        preferences.edit().putString(MISSION,mission).apply()
+    }
+
     fun getUserId(): Int? = preferences.getInt(USERID, 0)
     fun setUserId(userid: Int){
         preferences.edit().putInt(USERID,userid).apply()
@@ -43,5 +48,10 @@ class Preferences(context: Context) {
     fun getUserAttrs(): String? = preferences.getString(USERATTRS,"")
     fun setUserAttrs(userattrs: String){
         preferences.edit().putString(USERATTRS,userattrs).apply()
+    }
+
+    fun getUserInterest(): String? = preferences.getString(USERINTERESTS,"")
+    fun setUserInterest(userinterests: String){
+        preferences.edit().putString(USERINTERESTS,userinterests).apply()
     }
 }

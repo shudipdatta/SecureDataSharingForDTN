@@ -11,7 +11,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.ListView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -19,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.securedatasharingfordtn.R
 import com.example.securedatasharingfordtn.database.DTNDataSharingDatabase
+import com.example.securedatasharingfordtn.database.StoredImageData
 import com.example.securedatasharingfordtn.databinding.FragmentConImageBinding
 import java.io.File
 
@@ -69,29 +69,58 @@ class ConImageFragment : Fragment() {
 
         connectionViewModel.doneLoad.observe(viewLifecycleOwner, Observer {
             if (it == true) {
-                var conName = connectionViewModel.conName.value //selected connection
+                var conName = connectionViewModel.conName.value.toString().split("\n")[1].split(":").last().trim() //selected connection name
+                var interests = connectionViewModel.conName.value.toString().split("\n")[3].split(":").last().trim() //selected connection interests
+                val policy = connectionViewModel.policy.value.toString()
+                binding.conPolicyTextview.text = "Receiver: $conName\t&\tPolicy: $policy"
+
+                var similarityMap = HashMap<StoredImageData, Double>()
+
                 for (image in connectionViewModel.imageList) {
+                    if(!image.isrevoked) {
+                        val similarity = calculateSimilarity(image.keywords, interests)
+                        similarityMap[image] = similarity
+                    }
+                }
+                //sort similarityMap
+                //val sortedMap = similarityMap.toSortedMap(compareByDescending { it -> it })
+                val sortedMap = similarityMap.toList().sortedBy { (k, v) -> v }.toMap()
+
+                //put in photolist
+                for (keyval in sortedMap) {
+                    val image = keyval.key
                     val imgFile =
                         if (image.isowned) getPhotoFileUri(image.imageid, OWN_IMAGE_FOLDER)
                         else getPhotoFileUri(image.imageid, COLLECTED_IMAGE_FOLDER)
                     val bitmap = BitmapFactory.decodeFile(imgFile.path)
-                    photolist.add(ImageListItem(bitmap!!, imgFile.name, image.caption, 0.0, image.isowned))
+                    val item = ImageListItem(bitmap!!, keyval.value, image.imageid, image.isowned, image.path, image.caption, image.keywords, image.from, image.isencrypted, image.policy, image.isrevoked, image.mission)
+                    photolist.add(0,item)
                 }
+
                 adapter.notifyDataSetChanged();
             }
         })
     }
 
+    private fun calculateSimilarity(keywords: String, interests: String): Double {
+        var keywordsMap = HashMap<String, Double>()
+        for (keyword in keywords.toLowerCase().split(',')) {
+            keywordsMap[keyword.split(':').first()] = keyword.split(':').last().toDouble()
+        }
+        val commonInt = ArrayList<String>(interests.toLowerCase().split(' '))
+        commonInt.retainAll(keywordsMap.keys)
+        var totalSim = 0.0
+        for (i in commonInt) {
+            totalSim += keywordsMap[i]!!
+        }
+        return totalSim
+    }
+
     private fun clickedImageItem() {
         binding.imageList.onItemClickListener =
             AdapterView.OnItemClickListener { parent, view, position, id ->
-                val item = parent.getItemAtPosition(position)
-                val image = item as ImageListItem
-                connectionViewModel.setImgTitle(image.title)
-                val folder =
-                    if (image.isowned) OWN_IMAGE_FOLDER
-                    else COLLECTED_IMAGE_FOLDER
-                connectionViewModel.setImgFile(getPhotoFileUri(image.title, folder))
+                val item = parent.getItemAtPosition(position) as ImageListItem
+                connectionViewModel.setImageItem(item)
                 connectionViewModel.isSelectedImage(true)
                 findNavController().popBackStack()
             }

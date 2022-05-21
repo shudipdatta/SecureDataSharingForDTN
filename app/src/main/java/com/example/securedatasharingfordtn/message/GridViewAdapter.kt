@@ -34,7 +34,7 @@ class GridViewAdapter(
         }
 
         val item: ImageGridItem = data[position]
-        holder!!.imageTitle?.text = item.title
+        holder!!.imageTitle?.text = item.imageid
         holder.image?.setImageBitmap(item.image)
         return row as View
     }

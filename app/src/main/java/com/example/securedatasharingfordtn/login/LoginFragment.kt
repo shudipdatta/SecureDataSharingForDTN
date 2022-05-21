@@ -215,9 +215,11 @@ class LoginFragment : Fragment()  {
                 preferences.setMembers(loginViewModel.members)
 
                 //test
+                preferences.setMission(loginViewModel.usermission.toString())
                 preferences.setUserId(loginViewModel.getUser().userid)
                 preferences.setUserName(loginViewModel.getUser().username)//.getUser().firstname + " " + loginViewModel.getUser().lastname)
                 preferences.setUserAttrs(loginViewModel.userattrs)
+                preferences.setUserInterest(loginViewModel.userinterests)
 
                 view?.findNavController()?.navigate(R.id.action_loginFragment_to_mainFragment)
 

@@ -35,7 +35,7 @@ class ListViewAdapter(
         }
 
         val item: ImageListItem = data[position]
-        holder!!.title?.text = "Photo ID:\t" + item.title
+        holder!!.title?.text = "Photo ID:\t" + item.imageid
         holder!!.caption?.text = "Caption:\t" + item.caption
         holder!!.similarity?.text = "Similarity:\t" + item.similarity.toString()
         holder.image?.setImageBitmap(item.image)

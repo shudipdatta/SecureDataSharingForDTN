@@ -1,13 +1,17 @@
 <component name="libraryTable">
   <library name="Gradle: androidx.vectordrawable:vectordrawable-animated:1.1.0@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/aab692784fc2e83e37ad23bea8d3e36c/transformed/vectordrawable-animated-1.1.0/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/aab692784fc2e83e37ad23bea8d3e36c/transformed/vectordrawable-animated-1.1.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/aab692784fc2e83e37ad23bea8d3e36c/transformed/vectordrawable-animated-1.1.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/9ab94eb9c3f3ced2b72804848dc15725/transformed/vectordrawable-animated-1.1.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/e951ced757662ba1098440eae2c7ad16/transformed/vectordrawable-animated-1.1.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/d2eb3edc11b0f051cce5f22a8976e24b/transformed/vectordrawable-animated-1.1.0/res" />
+      <root url="file://$PROJECT_DIR$/../Thesis_docs/ImageCaptioningAndroid2 - Copy/android_apps/google_tflite_demo/demo/caches/transforms-3/aab692784fc2e83e37ad23bea8d3e36c/transformed/vectordrawable-animated-1.1.0/AndroidManifest.xml" />
+      <root url="file://$PROJECT_DIR$/../Thesis_docs/ImageCaptioningAndroid2 - Copy/android_apps/google_tflite_demo/demo/caches/transforms-3/aab692784fc2e83e37ad23bea8d3e36c/transformed/vectordrawable-animated-1.1.0/res" />
+      <root url="jar://$PROJECT_DIR$/../Thesis_docs/ImageCaptioningAndroid2 - Copy/android_apps/google_tflite_demo/demo/caches/transforms-3/aab692784fc2e83e37ad23bea8d3e36c/transformed/vectordrawable-animated-1.1.0/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.vectordrawable/vectordrawable-animated/1.1.0/871a7705cd03bc246947638c712cdd11378233ff/vectordrawable-animated-1.1.0-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../Thesis_docs/ImageCaptioningAndroid2 - Copy/android_apps/google_tflite_demo/demo/caches/modules-2/files-2.1/androidx.vectordrawable/vectordrawable-animated/1.1.0/871a7705cd03bc246947638c712cdd11378233ff/vectordrawable-animated-1.1.0-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

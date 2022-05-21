@@ -1,12 +1,14 @@
 <component name="libraryTable">
   <library name="Gradle: com.google.android.gms:play-services-nearby:18.0.0@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/d62658ca2a821aba029644c3836d26e6/transformed/jetified-play-services-nearby-18.0.0/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/d62658ca2a821aba029644c3836d26e6/transformed/jetified-play-services-nearby-18.0.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/d62658ca2a821aba029644c3836d26e6/transformed/jetified-play-services-nearby-18.0.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/f7a6070bf404500b2f1fbcc9c1156b95/transformed/jetified-play-services-nearby-18.0.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/c7ee009bde196147e0df872d04fa4599/transformed/jetified-play-services-nearby-18.0.0/res" />
+      <root url="file://$PROJECT_DIR$/../Thesis_docs/ImageCaptioningAndroid2 - Copy/android_apps/google_tflite_demo/demo/caches/transforms-3/d62658ca2a821aba029644c3836d26e6/transformed/jetified-play-services-nearby-18.0.0/res" />
+      <root url="file://$PROJECT_DIR$/../Thesis_docs/ImageCaptioningAndroid2 - Copy/android_apps/google_tflite_demo/demo/caches/transforms-3/d62658ca2a821aba029644c3836d26e6/transformed/jetified-play-services-nearby-18.0.0/AndroidManifest.xml" />
+      <root url="jar://$PROJECT_DIR$/../Thesis_docs/ImageCaptioningAndroid2 - Copy/android_apps/google_tflite_demo/demo/caches/transforms-3/d62658ca2a821aba029644c3836d26e6/transformed/jetified-play-services-nearby-18.0.0/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.android.gms/play-services-nearby/18.0.0/ee14906f3e61da09619f990ebaa6c29c5f624fac/play-services-nearby-18.0.0-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../Thesis_docs/ImageCaptioningAndroid2 - Copy/android_apps/google_tflite_demo/demo/caches/modules-2/files-2.1/com.google.android.gms/play-services-nearby/18.0.0/ee14906f3e61da09619f990ebaa6c29c5f624fac/play-services-nearby-18.0.0-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES />
   </library>

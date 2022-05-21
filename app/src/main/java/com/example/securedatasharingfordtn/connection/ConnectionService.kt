@@ -9,11 +9,18 @@ import android.util.Log
 import android.widget.Toast
 import androidx.collection.SimpleArrayMap
 import androidx.core.net.toUri
+import com.example.securedatasharingfordtn.GlobalApp
+import com.example.securedatasharingfordtn.congestion.EndpointInfo
+import com.example.securedatasharingfordtn.revoabe.PrivateKey
+import com.example.securedatasharingfordtn.revoabe.PublicKey
 import com.google.android.gms.common.util.IOUtils.copyStream
 import com.google.android.gms.nearby.Nearby
 import com.google.android.gms.nearby.connection.*
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
+import it.unisa.dia.gas.jpbc.Pairing
+import it.unisa.dia.gas.plaf.jpbc.pairing.PairingFactory
+import it.unisa.dia.gas.plaf.jpbc.util.Arrays
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -21,23 +28,6 @@ import java.io.InputStream
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.charset.StandardCharsets
-import android.content.Intent.getIntent
-import android.os.Bundle
-import android.widget.EditText
-import androidx.lifecycle.ViewModelProvider
-import com.example.securedatasharingfordtn.GlobalApp
-import com.example.securedatasharingfordtn.Preferences
-import com.example.securedatasharingfordtn.R
-import com.example.securedatasharingfordtn.SharedViewModel
-import com.example.securedatasharingfordtn.congestion.EndpointInfo
-import com.example.securedatasharingfordtn.login.LoginViewModel
-import com.example.securedatasharingfordtn.revoabe.Ciphertext
-import com.example.securedatasharingfordtn.revoabe.PrivateKey
-import com.example.securedatasharingfordtn.revoabe.PublicKey
-import com.example.securedatasharingfordtn.revoabe.ReVo_ABE
-import it.unisa.dia.gas.jpbc.Pairing
-import it.unisa.dia.gas.plaf.jpbc.pairing.PairingFactory
-import it.unisa.dia.gas.plaf.jpbc.util.Arrays
 
 /***check service condition on force stop***/
 
@@ -272,10 +262,10 @@ class ConnectionService : Service() {
             }
         }
 
-//    private fun sendPayload(endpointId: String, bytes: ByteArray) {
-//        val payload = Payload.fromBytes(bytes)
-//        Nearby.getConnectionsClient(applicationContext).sendPayload(endpointId, payload)
-//    }
+    private fun sendPayload(endpointId: String, bytes: ByteArray) {
+        val payload = Payload.fromBytes(bytes)
+        Nearby.getConnectionsClient(applicationContext).sendPayload(endpointId, payload)
+    }
 
     private fun sendPayload(endpointId: String, msgType: Int) {
         when (msgType) {
@@ -353,7 +343,7 @@ class ConnectionService : Service() {
 //                    val rcvdPayload = String(payload.asBytes()!!, StandardCharsets.UTF_8)
 //                    val msgType = (rcvdPayload.split("|")[0]).toInt()
 //                    val rcvdData = rcvdPayload.split("|")[1]
-//                    //rcvdFilename = String(ReVo_ABE.decrypt(pairing,publicKey, Ciphertext(payload.asBytes()!!,pairing),privateKey) )
+//                    rcvdFilename = String(ReVo_ABE.decrypt(pairing,publicKey, Ciphertext(payload.asBytes()!!,pairing),privateKey) )
 //                    when (msgType) {
 //                        EndpointInfo.MsgInitInfo -> {
 //                            val username = rcvdData.split("\t")[0]
@@ -414,7 +404,7 @@ class ConnectionService : Service() {
                     val `in`: InputStream? = context.contentResolver.openInputStream(uri!!)
                     //copyStream(`in`, FileOutputStream(File(context.cacheDir, rcvdFilename)))
                     val movedFile = getPhotoFileUri(rcvdFilename!!, "collected_images")
-                    copyStream(`in`, FileOutputStream(movedFile))
+                    copyStream(`in`!!, FileOutputStream(movedFile))
                 } catch (e: IOException) {
                     // Log the error.
                 } finally {

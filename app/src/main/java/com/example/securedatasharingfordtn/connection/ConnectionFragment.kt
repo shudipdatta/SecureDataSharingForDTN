@@ -7,8 +7,10 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
+import android.os.Environment
 import android.os.IBinder
 import android.provider.Settings
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,6 +44,8 @@ class ConnectionFragment : Fragment() {
     private lateinit var adapter: ArrayAdapter<String>
     private lateinit var listElementsArrayList: ArrayList<String>
     private lateinit var policyText: EditText
+    private lateinit var keys: ByteArray
+    private lateinit var pairingDir: String
 
     private lateinit var conServiceIntent: Intent
     private lateinit var conService: NearbyService
@@ -71,6 +75,12 @@ class ConnectionFragment : Fragment() {
         showConnectionList()
         clickedConnectionItem()
 
+        //get pairing info
+        val bundle = activity?.intent?.extras
+        pairingDir = bundle!!.getString("pairingDir").toString()
+        keys = bundle.getByteArray("keys")!!
+
+        //for connection switch
         isServiceRunning = isNearbyServiceRunning(NearbyService::class.java)
         binding.connectionOnOff.setOnCheckedChangeListener { _, isChecked -> switchConService(isChecked)}
         if (isServiceRunning) {
@@ -78,7 +88,8 @@ class ConnectionFragment : Fragment() {
         }
 
         //if conService not null, initialize functions will not be called. so call here
-        if (this::conService.isInitialized) { //(conService != null) {
+        // if back from delete fragment, con service is initialized, otherwise, not initialized
+        if (this::conService.isInitialized) {
             refreshConnectionList()
             populateConnectionList()
             sendMessage()
@@ -108,8 +119,8 @@ class ConnectionFragment : Fragment() {
             AdapterView.OnItemClickListener { parent, view, position, id ->
                 //preferences.setPolicy(policyText.text.toString())
                 var conName = binding.connectionList.getItemAtPosition(position) as String
-                conName = conName.split("\n")[0].split(" ").last()
                 connectionViewModel.setConName(conName)
+                connectionViewModel.setPolicy(binding.editTextPolicy.text.toString())
                 findNavController().navigate(R.id.action_connectionFragment_to_conImageFragment)
             }
     }
@@ -127,7 +138,8 @@ class ConnectionFragment : Fragment() {
         listElementsArrayList.clear()
         val endpointNameConnected = ArrayList<String>()
         for ((name, endpoint) in conService.endpoints) {
-            endpointNameConnected.add("Device ID: " + endpoint.name + "\nName: " + endpoint.username + "\nAttributes: " + endpoint.userattrs) // + "\n" + EndpointInfo.StatusString[endpoint.status])
+            endpointNameConnected.add("Device ID: " + endpoint.name + "\nName: " + endpoint.username
+                    + "\nAttributes: " + endpoint.userattrs+ "\nInterests: " + endpoint.userinterests) // + "\n" + EndpointInfo.StatusString[endpoint.status])
         }
 
         listElementsArrayList.addAll(endpointNameConnected)
@@ -182,37 +194,44 @@ class ConnectionFragment : Fragment() {
         endpoint.name = DEVICE_ID
         endpoint.username = preferences.getUserName()!!
         endpoint.userattrs = preferences.getUserAttrs()!!
-        conService.serviceInitInfo(endpoint, dataSource)
+        endpoint.userinterests = preferences.getUserInterest()!!
+        conService.serviceInitInfo(endpoint, dataSource, pairingDir, keys, preferences)
     }
 
     private fun sendMessage() {
         connectionViewModel.isSelected.observe(viewLifecycleOwner, Observer {
             if (it == true) {
-                val title = connectionViewModel.imgTitle.value as String
-                val image = connectionViewModel.imgFile.value as File
-                conService.setImageInfo(title, image)
-                conService.setConnection(connectionViewModel.conName.value as String)
+                val item = connectionViewModel.image.value as ImageListItem
+                val policyMsg = binding.editTextPolicy.text.toString()
+
+                val conName = connectionViewModel.conName.value.toString().split("\n")[0].split(" ").last()
+                val userName = connectionViewModel.conName.value.toString().split("\n")[1].split(" ").last()
+                val memberList = preferences.getMembers()!!.split(";")
+                var userIndexRL = -1;
+                for (member in memberList) {
+                    userIndexRL += 1
+                    if(member.startsWith(userName)) {
+                        break
+                    }
+                }
+                conService.setImageInfo(item, policyMsg, userIndexRL)
+                conService.setConnection(conName)
 
                 connectionViewModel.isSelectedImage(false)
-                Toast.makeText(activity, "Sending File: $title", Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, "Sending File: ${item.imageid}", Toast.LENGTH_SHORT).show()
             }
         })
     }
 
-//    override fun onStart() {
-//        super.onStart()
-//        // Bind to LocalService
-//        Intent(activity, NearbyService::class.java).also { intent ->
-//            activity?.bindService(intent, connection, Context.BIND_AUTO_CREATE)
-//        }
-//    }
+    // Returns the File for a photo stored on disk given the fileName
+    private fun getPhotoFileUri(fileName: String, folder: String): File {
+        // Use `getExternalFilesDir` on Context to access package-specific directories. // This way, we don't need to request external read/write runtime permissions.
+        val mediaStorageDir = File(application.getExternalFilesDir(Environment.DIRECTORY_PICTURES), folder)
 
-//    override fun onStop() {
-//        super.onStop()
-//        if (conServiceBound) {
-//            //conService.setCallbacks(null) //unregister
-//            activity?.unbindService(connection)
-//            conServiceBound = false;
-//        }
-//    }
+        if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
+            Log.d("MessageViewModel", "failed to create directory")
+        }
+
+        return File(mediaStorageDir.getPath() + File.separator.toString() + fileName)
+    }
 }

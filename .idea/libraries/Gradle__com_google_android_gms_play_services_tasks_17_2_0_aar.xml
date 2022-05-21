@@ -1,12 +1,14 @@
 <component name="libraryTable">
   <library name="Gradle: com.google.android.gms:play-services-tasks:17.2.0@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/fb408ebc9d65b1e1b313ed2e627d4667/transformed/jetified-play-services-tasks-17.2.0/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/fb408ebc9d65b1e1b313ed2e627d4667/transformed/jetified-play-services-tasks-17.2.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/fb408ebc9d65b1e1b313ed2e627d4667/transformed/jetified-play-services-tasks-17.2.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/7129432f5df2446d4994b5fcc8496e20/transformed/jetified-play-services-tasks-17.2.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/c31f2b162d521cbb91e02f403194b757/transformed/jetified-play-services-tasks-17.2.0/res" />
+      <root url="file://$PROJECT_DIR$/../Thesis_docs/ImageCaptioningAndroid2 - Copy/android_apps/google_tflite_demo/demo/caches/transforms-3/fb408ebc9d65b1e1b313ed2e627d4667/transformed/jetified-play-services-tasks-17.2.0/res" />
+      <root url="file://$PROJECT_DIR$/../Thesis_docs/ImageCaptioningAndroid2 - Copy/android_apps/google_tflite_demo/demo/caches/transforms-3/fb408ebc9d65b1e1b313ed2e627d4667/transformed/jetified-play-services-tasks-17.2.0/AndroidManifest.xml" />
+      <root url="jar://$PROJECT_DIR$/../Thesis_docs/ImageCaptioningAndroid2 - Copy/android_apps/google_tflite_demo/demo/caches/transforms-3/fb408ebc9d65b1e1b313ed2e627d4667/transformed/jetified-play-services-tasks-17.2.0/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.android.gms/play-services-tasks/17.2.0/81416b4eaf80f684ed08fc33ca57b2602319c811/play-services-tasks-17.2.0-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../Thesis_docs/ImageCaptioningAndroid2 - Copy/android_apps/google_tflite_demo/demo/caches/modules-2/files-2.1/com.google.android.gms/play-services-tasks/17.2.0/81416b4eaf80f684ed08fc33ca57b2602319c811/play-services-tasks-17.2.0-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES />
   </library>

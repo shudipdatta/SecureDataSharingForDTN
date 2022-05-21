@@ -6,7 +6,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [LoginUserData::class, OtherUserData::class, StoredImageData::class], version = 5, exportSchema = false)
+@Database(entities = [LoginUserData::class, OtherUserData::class, StoredImageData::class], version = 6, exportSchema = false)
 abstract class DTNDataSharingDatabase : RoomDatabase() {
     abstract val loginUserDao: LoginUserDao
     abstract val otherUserDao: OtherUserDao

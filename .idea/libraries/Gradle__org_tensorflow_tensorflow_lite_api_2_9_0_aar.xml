@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: org.tensorflow:tensorflow-lite-api:2.9.0@aar">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/f05714de954594878b3bb66a8c2df4b8/transformed/jetified-tensorflow-lite-api-2.9.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/f9e124fa798e9704471621e9544e6c11/transformed/jetified-tensorflow-lite-api-2.9.0/res" />
+      <root url="jar://$PROJECT_DIR$/../Thesis_docs/ImageCaptioningAndroid2 - Copy/android_apps/google_tflite_demo/demo/caches/transforms-3/06ce843dce51cdad28eb5894a5b7d26a/transformed/jetified-tensorflow-lite-api-2.9.0/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../Thesis_docs/ImageCaptioningAndroid2 - Copy/android_apps/google_tflite_demo/demo/caches/transforms-3/06ce843dce51cdad28eb5894a5b7d26a/transformed/jetified-tensorflow-lite-api-2.9.0/AndroidManifest.xml" />
+      <root url="file://$PROJECT_DIR$/../Thesis_docs/ImageCaptioningAndroid2 - Copy/android_apps/google_tflite_demo/demo/caches/transforms-3/06ce843dce51cdad28eb5894a5b7d26a/transformed/jetified-tensorflow-lite-api-2.9.0/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

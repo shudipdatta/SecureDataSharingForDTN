@@ -3,34 +3,47 @@ package com.example.securedatasharingfordtn.connection
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.*
-import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
 import androidx.collection.SimpleArrayMap
 import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.securedatasharingfordtn.GlobalApp
+import com.example.securedatasharingfordtn.Preferences
+import com.example.securedatasharingfordtn.R
 import com.example.securedatasharingfordtn.congestion.EndpointInfo
 import com.example.securedatasharingfordtn.database.StoredImageDao
 import com.example.securedatasharingfordtn.database.StoredImageData
+import com.example.securedatasharingfordtn.revoabe.Ciphertext
+import com.example.securedatasharingfordtn.revoabe.PrivateKey
+import com.example.securedatasharingfordtn.revoabe.PublicKey
+import com.example.securedatasharingfordtn.revoabe.ReVo_ABE
 import com.google.android.gms.common.util.IOUtils
 import com.google.android.gms.nearby.Nearby
 import com.google.android.gms.nearby.connection.*
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
+import it.unisa.dia.gas.jpbc.Pairing
+import it.unisa.dia.gas.plaf.jpbc.pairing.PairingFactory
+import it.unisa.dia.gas.plaf.jpbc.util.Arrays
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
-import java.io.InputStream
+import java.io.*
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
 import java.nio.charset.StandardCharsets
 
 class NearbyService : Service() {
+    companion object {
+        private const val OWN_IMAGE_FOLDER = "own_images"
+        private const val COLLECTED_IMAGE_FOLDER = "collected_images"
+        private const val ENCRYPTED_PREFIX = "encrypted"
+    }
 
     private val TAG = "NearbyService"
     private val SERVICE_ID = "Nearby"
@@ -43,9 +56,20 @@ class NearbyService : Service() {
     //provided service info
     private lateinit var userProfile: EndpointInfo
     private lateinit var dataSource: StoredImageDao
-    private var textMsg: String? = null
-    private var imageMsg: File? = null
+
     private var rcvdFilename: String? = null
+    private var policyMsg: String? = null
+    private var receiverRLindex: Int = -1
+    private var imageItem: ImageListItem? = null
+
+    lateinit var privateKey: PrivateKey
+    lateinit var publicKey: PublicKey
+    lateinit var pairing: Pairing
+
+    private lateinit var keys: ByteArray
+    private lateinit var pairingDir: String
+    private lateinit var preferences: Preferences
+
     private val incomingFilePayloads = SimpleArrayMap<Long, Payload>()
     private val completedFilePayloads = SimpleArrayMap<Long, Payload>()
     private val filePayloadFilenames = SimpleArrayMap<Long, String>()
@@ -85,20 +109,31 @@ class NearbyService : Service() {
 
     /* Information Receive Function */
 
-    fun serviceInitInfo(userProfile: EndpointInfo, dataSource: StoredImageDao) {
+    fun serviceInitInfo(userProfile: EndpointInfo, dataSource: StoredImageDao, pairingDir: String, keys: ByteArray, preferences: Preferences) {
         if(!this::userProfile.isInitialized) { //initializing multiple time creates error in advertise and discovery
 
             this.userProfile = userProfile
             this.dataSource = dataSource
+            this.pairingDir = pairingDir
+            this.keys = keys
+            this.preferences = preferences
+
+            //set encrypt/decrypt variables
+            this.pairing = PairingFactory.getPairing(pairingDir)
+            val publickeySize = ByteBuffer.wrap(keys,0,4).order(ByteOrder.nativeOrder()).int
+            val privatekeySize = ByteBuffer.wrap(keys,publickeySize+4,4).order(ByteOrder.nativeOrder()).int
+            this.publicKey = PublicKey(Arrays.copyOfRange(keys,4,publickeySize+4),this.pairing)
+            this.privateKey = PrivateKey(Arrays.copyOfRange(keys,8+publickeySize,8+publickeySize+privatekeySize),this.pairing)
 
             advertiserHandler.post(advertiserRunnable)
             discoveryHandler.post(discoverRunnable)
         }
     }
 
-    fun setImageInfo(textMsg: String, imageMsg: File) {
-        this.textMsg = textMsg
-        this.imageMsg = imageMsg
+    fun setImageInfo(item: ImageListItem, policyMsg: String, receiverRLindex: Int) {
+        this.imageItem = item
+        this.policyMsg = policyMsg
+        this.receiverRLindex = receiverRLindex
     }
 
     /* Service Active Function */
@@ -117,7 +152,7 @@ class NearbyService : Service() {
 
     private fun startAdvertising() {
         val advertisingOptions = AdvertisingOptions.Builder().setStrategy(STRATEGY).build()
-        val initdata = userProfile.name + "\t" + userProfile.username!! + "\t" + userProfile.userattrs!!
+        val initdata = userProfile.name + "\t" + userProfile.username!! + "\t" + userProfile.userattrs!! + "\t" + userProfile.userinterests!!
         Nearby.getConnectionsClient(context)
             .startAdvertising(
                 initdata, SERVICE_ID, connectionLifeCycleCallback, advertisingOptions
@@ -156,6 +191,7 @@ class NearbyService : Service() {
                     endpoint.name = initData[0]
                     endpoint.username = initData[1]
                     endpoint.userattrs = initData[2].replace(',',' ')
+                    endpoint.userinterests = initData[3].replace(',', ' ')
                     endpoints[initData[0]] = endpoint
 
                     endpointIDNameMap[endpointId] = initData[0]
@@ -228,12 +264,35 @@ class NearbyService : Service() {
         }
 
     private fun sendPayload(endpointId: String, msgType: Int) {
-        if (textMsg != null) {
+        if (imageItem != null) {
+            var revoked = "false"
+            var revokedList = listOf<Int>()
+            for(RLStr in preferences.getRevokedMembers()) { //.toList()){
+                if (this.receiverRLindex == RLStr.toInt()) {
+                    revoked = "true"
+                }
+                revokedList += RLStr.toInt()+1
+            }
+
+            var textMsg = imageItem!!.imageid + "\t" + imageItem!!.caption + "\t" + imageItem!!.keywords  +
+                    "\t" + imageItem!!.mission  + "\t" + revoked + "\t"
+            textMsg += if (imageItem!!.isencrypted) imageItem!!.policy  else this.policyMsg
             val filenamePayload = Payload.fromBytes(textMsg!!.toByteArray())
             Nearby.getConnectionsClient(context).sendPayload(endpointId, filenamePayload)
-        }
-        if (imageMsg != null) {
-            val pfd = contentResolver.openFileDescriptor(imageMsg!!.toUri(), "r")
+
+            val storedFile: File
+            if (imageItem!!.isencrypted) {
+                storedFile = getPhotoFileUri(ENCRYPTED_PREFIX + imageItem!!.imageid, COLLECTED_IMAGE_FOLDER) //if the file is encrypted, it is definitely in collected folder
+            }
+            else {
+                val folder = if(imageItem!!.isowned) OWN_IMAGE_FOLDER else COLLECTED_IMAGE_FOLDER
+                val imageFile = getPhotoFileUri(imageItem!!.imageid, folder)
+                val encryptedFile = ReVo_ABE.encrypt(this.pairing, this.publicKey, imageFile!!.readBytes(), policyMsg, revokedList)
+                storedFile = getPhotoFileUri("encrypted_file", OWN_IMAGE_FOLDER) //if the file is plain, keep it as encrypted in own-image folder and send this
+                storedFile.writeBytes(encryptedFile.toByteArray())
+            }
+
+            val pfd = contentResolver.openFileDescriptor(storedFile!!.toUri(), "r")
             val filePayload = Payload.fromFile(pfd!!)
             Nearby.getConnectionsClient(applicationContext).sendPayload(endpointId, filePayload)
         }
@@ -246,29 +305,6 @@ class NearbyService : Service() {
             when (payload.type) {
                 Payload.Type.BYTES -> {
                     rcvdFilename = String(payload.asBytes()!!, StandardCharsets.UTF_8)
-
-                    //val encryptedFilename = ReVo_ABE.decrypt(context.pairing,context.publicKey, rcvdFilename, context.privateKey)
-
-//                    val rcvdPayload = String(payload.asBytes()!!, StandardCharsets.UTF_8)
-//                    val msgType = (rcvdPayload.split("|")[0]).toInt()
-//                    val rcvdData = rcvdPayload.split("|")[1]
-//                    //rcvdFilename = String(ReVo_ABE.decrypt(pairing,publicKey, Ciphertext(payload.asBytes()!!,pairing),privateKey) )
-//                    when (msgType) {
-//                        EndpointInfo.MsgInitInfo -> {
-//                            val username = rcvdData.split("\t")[0]
-//                            val userattrs = rcvdData.split("\t")[1]
-//                            val endpointName = endpointIDNameMap[endpointId]
-//                            endpoints.get(endpointName)!!.status = 1 //connected
-//                            endpoints.get(endpointName)!!.username = username
-//                            endpoints.get(endpointName)!!.userattrs = userattrs
-//                            //initial info is there, so reload the gui
-//                            serviceCallbacks?.refreshConnectionList(endpoints)
-//                        }
-//                        EndpointInfo.MsgDirectory -> {
-//                        }
-//                        EndpointInfo.MsgReward -> {
-//                        }
-//                    }
                 }
                 Payload.Type.FILE -> {
                     // Add this to our tracking map, so that we can retrieve the payload later.
@@ -286,15 +322,15 @@ class NearbyService : Service() {
                 val payload = incomingFilePayloads.remove(payloadId)
                 completedFilePayloads.put(payloadId, payload)
                 if (payload != null && payload.type == Payload.Type.FILE) {
-                    val isDone = processFilePayload(payloadId)
+                    val isDone = processFilePayload(payloadId, endpointId)
                     if (isDone) {
-                        //Nearby.getConnectionsClient(context).disconnectFromEndpoint(endpointId)
+                        Nearby.getConnectionsClient(context).disconnectFromEndpoint(endpointId) //test
                     }
                 }
             }
         }
 
-        private fun processFilePayload(payloadId: Long): Boolean {
+        private fun processFilePayload(payloadId: Long, endpointId: String): Boolean {
             // BYTES and FILE could be received in any order, so we call when either the BYTES or the FILE
             // payload is completely received. The file payload is considered complete only when both have
             // been received.
@@ -311,11 +347,58 @@ class NearbyService : Service() {
                 try {
                     // Copy the file to a new location.
                     val `in`: InputStream? = context.contentResolver.openInputStream(uri!!)
-                    //copyStream(`in`, FileOutputStream(File(context.cacheDir, rcvdFilename)))
-                    val movedFile = getPhotoFileUri(rcvdFilename!!, "collected_images")
-                    IOUtils.copyStream(`in`, FileOutputStream(movedFile))
+
+                    val imageMetadata = rcvdFilename!!.split("\t")
+                    val imageName = imageMetadata[0]
+                    val imageCaption = imageMetadata[1]
+                    val imageKeywords = imageMetadata[2]
+                    val mission = imageMetadata[3]
+                    val revoked = imageMetadata[4]
+                    val policy = imageMetadata[5]
+
+                    val isrevoked = (revoked=="true")
+
+                    //check if policy exits in receiver attributes
+                    val policyArray = policy.split(",")
+                    val attributesArray = preferences.getUserAttrs()!!.split(",")
+                    val intersectArray = policyArray.intersect(attributesArray)
+
+                    val isencrypted: Boolean
+                    val movedFile = getPhotoFileUri(imageName, COLLECTED_IMAGE_FOLDER)
+
+                    if (intersectArray.isEmpty() || mission != preferences.getMission()) { //keep as encrypted
+                        val encryptedFile = getPhotoFileUri(ENCRYPTED_PREFIX + imageName, COLLECTED_IMAGE_FOLDER)
+                        IOUtils.copyStream(`in`!!, FileOutputStream(encryptedFile))
+                        val invalidFile: Bitmap =
+                            if (mission != preferences.getMission()) BitmapFactory.decodeResource(resources, R.drawable.invalid_perm)
+                            else BitmapFactory.decodeResource(resources, R.drawable.invalid_attr)
+                        val stream: OutputStream = FileOutputStream(movedFile)
+                        invalidFile.compress(Bitmap.CompressFormat.JPEG,100,stream)
+                        stream.flush()
+                        stream.close()
+                        isencrypted = true
+                    }
+                    else { //decrypt
+                        if (isrevoked) { //no encrypted file is saved, just the fake file
+                            val stream: OutputStream = FileOutputStream(movedFile)
+                            val invalidFile = BitmapFactory.decodeResource(resources, R.drawable.revoked)
+                            invalidFile.compress(Bitmap.CompressFormat.JPEG,100,stream)
+                            stream.flush()
+                            stream.close()
+                        }
+                        else {//decrypt
+                            val storedFile = getPhotoFileUri("encrypted_file", COLLECTED_IMAGE_FOLDER)
+                            IOUtils.copyStream(`in`!!, FileOutputStream(storedFile))
+                            val decryptedByteArray = ReVo_ABE.decrypt(pairing, publicKey, Ciphertext(storedFile.readBytes(), pairing), privateKey)
+                            movedFile.writeBytes(decryptedByteArray)
+                        }
+                        isencrypted = false
+                    }
+
                     //store in database
-                    storeImage(rcvdFilename!!, false, movedFile.path, "", "")
+                    storeImage(imageName, false, movedFile.path, imageCaption, imageKeywords,
+                        endpointIDNameMap[endpointId]!!, isencrypted, policy, isrevoked, mission)
+
                 } catch (e: IOException) {
                     // Log the error.
                 } finally {
@@ -349,14 +432,20 @@ class NearbyService : Service() {
             dataSource.insert(data)
         }
     }
-    fun storeImage(imageid:String, isowned:Boolean, path:String, caption:String, keywords:String) {
+    fun storeImage(imageid:String, isowned:Boolean, path:String, caption:String, keywords:String,
+                   from: String, isencrypted: Boolean, policy: String, isrevoked: Boolean, mission: String) {
         runBlocking {
             var image = StoredImageData(
                 imageid = imageid,
                 isowned = isowned,
                 path = path,
                 caption = caption,
-                keywords = keywords
+                keywords = keywords,
+                from = from,
+                isencrypted = isencrypted,
+                policy = policy,
+                isrevoked = isrevoked,
+                mission = mission
             )
             insert(image)
         }

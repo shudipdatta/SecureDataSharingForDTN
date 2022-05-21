@@ -16,28 +16,20 @@ class MessageViewModel
     lateinit var imageList: List<StoredImageData>
 
     // selected image fragment variables
-    private var _title = MutableLiveData<String>()
-    val title: LiveData<String>
-        get() = _title
-
-    private var _folder = MutableLiveData<String>()
-    val folder: LiveData<String>
-        get() = _folder
-
     private var _position = MutableLiveData<Int>()
     val position: LiveData<Int>
         get() = _position
 
-    fun setImageTitle(title:String) {
-        _title.value = title
-    }
-
-    fun setImageFolder(folder:String) {
-        _folder.value = folder
-    }
+    private var _image = MutableLiveData<ImageGridItem>()
+    val image: LiveData<ImageGridItem>
+        get() = _image
 
     fun setImagePosition(position:Int) {
         _position.value = position
+    }
+
+    fun setImageItem(image:ImageGridItem) {
+        _image.value = image
     }
 
 
@@ -80,14 +72,19 @@ class MessageViewModel
             database.insert(data)
         }
     }
-    fun storeImage(imageid:String, isowned:Boolean, path:String, caption:String, keywords:String) {
+    fun storeImage(item: ImageGridItem) {
         runBlocking {
             var image = StoredImageData(
-                imageid = imageid,
-                isowned = isowned,
-                path = path,
-                caption = caption,
-                keywords = keywords
+                imageid = item.imageid,
+                isowned = item.isowned,
+                path = item.path,
+                caption = item.caption,
+                keywords = item.keywords,
+                from = item.from,
+                isencrypted = item.isencrypted,
+                policy = item.policy,
+                isrevoked = item.isrevoked,
+                mission = item.mission
             )
             insert(image)
         }
@@ -107,7 +104,7 @@ class MessageViewModel
         runBlocking {
             delete(imageid)
         }
-        _doneStore.value = true
+        _doneDelete.value = true
     }
     fun doneDeleteEvent() {
         _doneDelete.value = false

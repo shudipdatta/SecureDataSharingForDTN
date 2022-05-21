@@ -21,4 +21,19 @@ data class StoredImageData(
 
     @ColumnInfo(name = "keywords")
     var keywords: String="",
+
+    @ColumnInfo(name = "from")
+    var from: String="",
+
+    @ColumnInfo(name = "is_encrypted")
+    var isencrypted: Boolean=false,
+
+    @ColumnInfo(name = "policy")
+    var policy: String="",
+
+    @ColumnInfo(name = "is_revoked")
+    var isrevoked: Boolean=false,
+
+    @ColumnInfo(name = "mission")
+    var mission: String="",
 )

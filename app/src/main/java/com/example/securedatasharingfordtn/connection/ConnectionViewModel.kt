@@ -9,7 +9,6 @@ import com.example.securedatasharingfordtn.database.StoredImageData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import java.io.File
 
 class ConnectionViewModel
     (val database: StoredImageDao, application: Application) : ViewModel() {
@@ -25,21 +24,21 @@ class ConnectionViewModel
         _conName.value = conName
     }
 
-    //selected image
-    private var _imgTitle = MutableLiveData<String>()
-    val imgTitle: LiveData<String>
-        get() = _imgTitle
+    private var _policy = MutableLiveData<String>()
+    val policy: LiveData<String>
+        get() = _policy
 
-    fun setImgTitle(imgTitle:String) {
-        _imgTitle.value = imgTitle
+    fun setPolicy(policy:String) {
+        _policy.value = policy
     }
 
-    private var _imgFile = MutableLiveData<File>()
-    val imgFile: LiveData<File>
-        get() = _imgFile
+    //selected image
+    private var _image = MutableLiveData<ImageListItem>()
+    val image: LiveData<ImageListItem>
+        get() = _image
 
-    fun setImgFile(imgFile:File) {
-        _imgFile.value = imgFile
+    fun setImageItem(image:ImageListItem) {
+        _image.value = image
     }
 
     private var _isSelected = MutableLiveData<Boolean>()
@@ -80,28 +79,5 @@ class ConnectionViewModel
     }
     fun doneLoadEvent() {
         _doneLoad.value = false
-    }
-
-    //insert a received image
-    private suspend fun insert(data: StoredImageData) {
-        withContext(Dispatchers.IO) {
-            database.insert(data)
-        }
-    }
-    fun storeImage(imageid:String, isowned:Boolean, path:String, caption:String, keywords:String) {
-        runBlocking {
-            var image = StoredImageData(
-                imageid = imageid,
-                isowned = isowned,
-                path = path,
-                caption = caption,
-                keywords = keywords
-            )
-            insert(image)
-        }
-        _doneStore.value = true
-    }
-    fun doneStoreEvent() {
-        _doneStore.value = false
     }
 }

@@ -24,6 +24,12 @@ class DeleteMessageFragment : Fragment() {
     private lateinit var binding: FragmentDeleteMessageBinding
     private lateinit var messageViewModel: MessageViewModel
 
+    companion object {
+        private const val OWN_IMAGE_FOLDER = "own_images"
+        private const val COLLECTED_IMAGE_FOLDER = "collected_images"
+        private const val ENCRYPTED_PREFIX = "encrypted"
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -43,18 +49,30 @@ class DeleteMessageFragment : Fragment() {
         binding.messageViewModel = messageViewModel
         binding.lifecycleOwner = this
 
-        val image = getPhotoFileUri(messageViewModel.title.value!!, messageViewModel.folder.value!!)
-        val bitmap = BitmapFactory.decodeFile(image.path)
-        val rotatedImage = getRotatedImage(bitmap, image.path)
+        //
+        val item = messageViewModel.image.value as ImageGridItem
 
-        binding.selectedTitle.setText(image.name)
-        binding.selectedImage.setImageBitmap(rotatedImage)
+        binding.selectedImage.setImageBitmap(item.image)
+        binding.selectedTitle.setText(item.imageid)
+        binding.selectedCaption.setText(item.caption)
+        binding.selectedKeywords.setText(item.keywords)
+        binding.selectedFrom.setText(item.from)
+        binding.selectedPolicy.setText(item.policy)
 
         binding.deleteImageButton.setOnClickListener {
-            if (image.exists()) {
-                image.delete()
+            val folder = if(item.isowned) OWN_IMAGE_FOLDER else COLLECTED_IMAGE_FOLDER
+            val imageFile = getPhotoFileUri(item.imageid, folder)
+            if (imageFile.exists()) {
+                imageFile.delete()
             }
-            messageViewModel.deleteImage(image.name)
+            if (item.isencrypted) {
+                val encryptedFile = getPhotoFileUri(ENCRYPTED_PREFIX + item.imageid, folder)
+                if (encryptedFile.exists()) {
+                    encryptedFile.delete()
+                }
+            }
+
+            messageViewModel.deleteImage(item.imageid)
             findNavController().popBackStack()
         }
         return binding.root
@@ -71,32 +89,4 @@ class DeleteMessageFragment : Fragment() {
 
         return File(mediaStorageDir.getPath() + File.separator.toString() + fileName)
     }
-
-    private fun getRotatedImage(image: Bitmap, path: String): Bitmap? {
-
-//        val ei = ExifInterface(path)
-//        val orientation: Int = ei.getAttributeInt(
-//            ExifInterface.TAG_ORIENTATION,
-//            ExifInterface.ORIENTATION_UNDEFINED
-//        )
-//
-//        return when (orientation) {
-//            ExifInterface.ORIENTATION_ROTATE_90 -> rotateImage(image, 90)
-//            ExifInterface.ORIENTATION_ROTATE_180 -> rotateImage(image, 180)
-//            ExifInterface.ORIENTATION_ROTATE_270 -> rotateImage(image, 270)
-//            ExifInterface.ORIENTATION_NORMAL -> image
-//            else -> image
-//        }
-        return rotateImage(image, 0)
-    }
-
-    private fun rotateImage(image: Bitmap, angle: Int): Bitmap? {
-        val matrix = Matrix()
-        matrix.postRotate(angle.toFloat())
-        return Bitmap.createBitmap(
-            image, 0, 0, image.width, image.height,
-            matrix, true
-        )
-    }
-
 }

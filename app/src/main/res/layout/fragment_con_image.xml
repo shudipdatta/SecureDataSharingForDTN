@@ -31,6 +31,28 @@
                 android:textColor="#1B1F37"
                 android:textSize="18sp" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/teal_700" />
+
+            <TextView
+                android:id="@+id/con_policy_textview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#E5F7FD"
+                android:padding="10dp"
+                android:paddingLeft="10dp"
+                android:text="Receiver: "
+                android:textAlignment="center"
+                android:textColor="#1B1F37"
+                android:textSize="18sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/teal_700" />
+
             <ListView
                 android:id="@+id/image_list"
                 android:layout_width="match_parent"

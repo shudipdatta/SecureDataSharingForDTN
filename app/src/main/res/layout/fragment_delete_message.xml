@@ -105,6 +105,53 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom"
                         android:padding="10dp" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="2dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:background="#E5F7FD"
+                        android:padding="10dp"
+                        android:text="From"
+                        android:textColor="#1B1F37"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/selected_from"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:padding="10dp" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="2dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:background="#E5F7FD"
+                        android:padding="10dp"
+                        android:text="Policy"
+                        android:textColor="#1B1F37"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/selected_policy"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:padding="10dp" />
                 </TableRow>
 
             </TableLayout>

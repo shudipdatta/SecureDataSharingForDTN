@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.securedatasharingfordtn.GlobalApp
 import com.example.securedatasharingfordtn.HelperFunctions
 import com.example.securedatasharingfordtn.database.LoginUserDao
 import com.example.securedatasharingfordtn.database.LoginUserData
@@ -23,6 +22,8 @@ class LoginViewModel
     var members: String = ""
     var userid: String = "" //test
     var userattrs: String = "" //test
+    var userinterests: String = "" //test
+    var usermission: Long = 0 //test
     private lateinit var user: LoginUserData
 
     val client = KtorHttpClient.KtorClient
@@ -138,6 +139,8 @@ class LoginViewModel
                     members = user.members
                     userid = user.userid.toString()
                     userattrs = user.attributes //test
+                    userinterests = user.interests //test
+                    usermission = user.mission
                 }
 
                 Log.i("Login", "find user in the database")
@@ -211,6 +214,11 @@ class LoginViewModel
                             keys = keys
                         )
                         Log.i("Login", "Private user: " + userInfo.string)
+                        //test
+                        members = user.members
+                        userattrs = user.attributes //test
+                        userinterests = user.interests //test
+                        usermission = user.mission
                     }
 
                 }

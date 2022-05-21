@@ -1,13 +1,16 @@
 package com.example.securedatasharingfordtn.message
 
 import android.app.Application
+import android.app.ProgressDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.net.Uri
+import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Environment
+import android.os.SystemClock
 import android.provider.MediaStore
 import android.provider.Settings
 import android.util.Log
@@ -23,12 +26,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.example.securedatasharingfordtn.Preferences
 import com.example.securedatasharingfordtn.R
 import com.example.securedatasharingfordtn.database.DTNDataSharingDatabase
 import com.example.securedatasharingfordtn.databinding.MessageFragmentBinding
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
+
 
 class MessageFragment : Fragment() {
 
@@ -42,11 +47,15 @@ class MessageFragment : Fragment() {
     private lateinit var application: Application
     private lateinit var binding: MessageFragmentBinding
     private lateinit var messageViewModel: MessageViewModel
+    private lateinit var preferences: Preferences
+    private var dialog: ProgressDialog? = null
+    private lateinit var captioner: Captioner
 
     private lateinit var photolist_own: ArrayList<ImageGridItem>
     private lateinit var adapter_own: GridViewAdapter
     private lateinit var DEVICE_ID: String
     private lateinit var photoFile: File
+    private lateinit var capturedItem: ImageGridItem
 
     private lateinit var photolist_collected: ArrayList<ImageGridItem>
     private lateinit var adapter_collected: GridViewAdapter
@@ -59,6 +68,7 @@ class MessageFragment : Fragment() {
 
         application = requireNotNull(this.activity).application
         val dataSource = DTNDataSharingDatabase.getInstance(application).storedUserDao
+        preferences = Preferences(requireContext())
         DEVICE_ID = Settings.Secure.getString(application.getContentResolver(), Settings.Secure.ANDROID_ID)
 
         photolist_own = ArrayList()
@@ -82,11 +92,16 @@ class MessageFragment : Fragment() {
             onLaunchCamera()
         }
 
+        //initialize captioner and detector
+        initImageProcessing()
+
         //when user click on an image
         clickedImageItem()
 
         //if user delete any photo
         deleteFromGridView()
+        //if user capture any photo
+        addToGridView()
 
         return binding.root
     }
@@ -98,12 +113,12 @@ class MessageFragment : Fragment() {
                     if (image.isowned) {
                         val imgFile = getPhotoFileUri(image.imageid, OWN_IMAGE_FOLDER)
                         val bitmap = BitmapFactory.decodeFile(imgFile.path)
-                        photolist_own.add(ImageGridItem(bitmap!!, imgFile.name))
+                        photolist_own.add(ImageGridItem(bitmap!!, imgFile.name, image.isowned, image.path, image.caption, image.keywords, image.from, image.isencrypted, image.policy, image.isrevoked, image.mission))
                     }
                     else {
                         val imgFile = getPhotoFileUri(image.imageid, COLLECTED_IMAGE_FOLDER)
                         val bitmap = BitmapFactory.decodeFile(imgFile.path)
-                        photolist_collected.add(ImageGridItem(bitmap!!, imgFile.name))
+                        photolist_collected.add(ImageGridItem(bitmap!!, imgFile.name, image.isowned, image.path, image.caption, image.keywords, image.from, image.isencrypted, image.policy, image.isrevoked, image.mission))
                     }
                 }
                 adapter_own = GridViewAdapter(application, R.layout.grid_image_layout, photolist_own)
@@ -189,11 +204,16 @@ class MessageFragment : Fragment() {
                 fos.write(bytes.toByteArray())
                 fos.close()
 
-                messageViewModel.storeImage(resizedFileName, true, resizedFile.path, "", "")
-
                 //update the gridview
                 val rotatedImage = getRotatedImage(resizedBitmap, resizedFile.path)
-                addToGridView(rotatedImage!!, resizedFileName)
+                capturedItem = ImageGridItem(rotatedImage!!, resizedFileName, true, resizedFile.path, "", "", "self", false, "", false,
+                    preferences.getMission()!!
+                )
+
+                //generate caption
+                dialog = ProgressDialog.show(this.activity,"Generating Caption...","please wait..",true)
+                val cnnTask = CNNTask(capturedItem)
+                cnnTask.execute(resizedFile.path)
             }
             else { // Result was a failure
                 Toast.makeText(application, "Picture wasn't taken!", Toast.LENGTH_SHORT).show()
@@ -201,11 +221,11 @@ class MessageFragment : Fragment() {
         }
     }
 
-    private fun addToGridView(rotatedImage: Bitmap, resizedFileName: String) {
+    private fun addToGridView() {
         messageViewModel.doneStore.observe(viewLifecycleOwner, Observer {
             if (it == true) {
-                photolist_own.add(ImageGridItem(rotatedImage,resizedFileName))
-                adapter_own.notifyDataSetChanged();
+                photolist_own.add(capturedItem)
+                adapter_own.notifyDataSetChanged()
                 messageViewModel.doneStoreEvent()
             }
         })
@@ -215,16 +235,14 @@ class MessageFragment : Fragment() {
         binding.gridviewOwn.onItemClickListener =
             AdapterView.OnItemClickListener { parent, view, position, id ->
                 val item = parent.getItemAtPosition(position) as ImageGridItem
-                messageViewModel.setImageTitle(item.title)
-                messageViewModel.setImageFolder(OWN_IMAGE_FOLDER)
+                messageViewModel.setImageItem(item)
                 messageViewModel.setImagePosition(position)
                 findNavController().navigate(R.id.action_messageFragment_to_deleteMessageFragment)
             }
         binding.gridviewCollected.onItemClickListener =
             AdapterView.OnItemClickListener { parent, view, position, id ->
                 val item = parent.getItemAtPosition(position) as ImageGridItem
-                messageViewModel.setImageTitle(item.title)
-                messageViewModel.setImageFolder(COLLECTED_IMAGE_FOLDER)
+                messageViewModel.setImageItem(item)
                 messageViewModel.setImagePosition(position)
                 findNavController().navigate(R.id.action_messageFragment_to_deleteMessageFragment)
             }
@@ -233,19 +251,49 @@ class MessageFragment : Fragment() {
     private fun deleteFromGridView() {
         messageViewModel.doneDelete.observe(viewLifecycleOwner, Observer {
             if (it == true) {
-                val folder = messageViewModel.folder.value
-                val position = messageViewModel.position.value as Int
-
-                if (folder == OWN_IMAGE_FOLDER) {
-                    photolist_own.removeAt(position)
-                    adapter_own.notifyDataSetChanged();
-                } else if (folder == COLLECTED_IMAGE_FOLDER) {
-                    photolist_collected.removeAt(position)
-                    adapter_collected.notifyDataSetChanged();
-                }
+                //the following part not needed. because back from deleteFragment reload the images
+//                val item = messageViewModel.image.value as ImageGridItem
+//                val position = messageViewModel.position.value as Int
+//
+//                if (item.isowned) {
+//                    photolist_own.removeAt(position)
+//                    adapter_own.notifyDataSetChanged();
+//                } else {
+//                    photolist_collected.removeAt(position)
+//                    adapter_collected.notifyDataSetChanged();
+//                }
 
                 messageViewModel.doneDeleteEvent()
             }
         })
+    }
+
+    private fun initImageProcessing() {
+        try {
+            captioner = Captioner(this.requireActivity().assets)
+        } catch (e: java.lang.Exception) {
+            println(e.message)
+        }
+    }
+
+    inner class CNNTask(val capturedItem: ImageGridItem) : AsyncTask<String?, Void?, String>() {
+        //private CNNListener listener;
+        private var startTime: Long = 0
+
+        override fun onPostExecute(caption: String) {
+            Log.i("TAG",String.format("elapsed wall time: %d ms", SystemClock.uptimeMillis() - startTime))
+            Log.i("TAG", caption)
+            dialog?.dismiss()
+
+            capturedItem.caption = caption
+            messageViewModel.storeImage(capturedItem)
+
+            super.onPostExecute(caption)
+        }
+
+        override fun doInBackground(vararg params: String?): String {
+            startTime = SystemClock.uptimeMillis()
+            return captioner.predictImage(params[0]!!)!!
+        }
     }
 }
