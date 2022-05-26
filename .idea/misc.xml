@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/AndroidStudioProjects/SecureDataSharingForDTN-master/app/src/main/res/layout/fragment_delete_message.xml" value="0.182518115942029" />
+        <entry key="..\:/AndroidStudioProjects/SecureDataSharingForDTN-master/app/src/main/res/layout/message_fragment.xml" value="0.1" />
         <entry key="..\:/Users/sdnv5/AndroidStudioProjects/SecureDataSharingForDTN/app/src/main/res/layout-land/fragment_main.xml" value="0.18121693121693122" />
         <entry key="..\:/Users/sdnv5/AndroidStudioProjects/SecureDataSharingForDTN/app/src/main/res/layout/activity_connection.xml" value="0.14130434782608695" />
         <entry key="..\:/Users/sdnv5/AndroidStudioProjects/SecureDataSharingForDTN/app/src/main/res/layout/activity_connection_v1.xml" value="0.265625" />

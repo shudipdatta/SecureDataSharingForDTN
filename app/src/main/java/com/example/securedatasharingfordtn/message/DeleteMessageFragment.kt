@@ -54,7 +54,21 @@ class DeleteMessageFragment : Fragment() {
 
         binding.selectedImage.setImageBitmap(item.image)
         binding.selectedTitle.setText(item.imageid)
-        binding.selectedCaption.setText(item.caption)
+
+        //binding.selectedCaption.setText(item.caption)
+        //test block
+        val caparr = item.caption.split(' ')
+        val halfsize = caparr.size / 2
+        var result = ""
+        for (i in 0 until halfsize) {
+            result += (caparr[i] + " ")
+        }
+        result += "\n"
+        for (i in halfsize until caparr.size) {
+            result += (caparr[i] + " ")
+        }
+        binding.selectedCaption.setText(result)
+
         binding.selectedKeywords.setText(item.keywords)
         binding.selectedFrom.setText(item.from)
         binding.selectedPolicy.setText(item.policy)

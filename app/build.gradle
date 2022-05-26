@@ -37,10 +37,13 @@ android {
     buildFeatures {
         dataBinding true
         viewBinding true
-
     }
 
+    androidResources {
+        noCompress 'lite'
+    }
 
+    namespace 'com.example.securedatasharingfordtn'
 }
 
 
@@ -68,7 +71,10 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui-ktx:2.4.1'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.1'
 
-    implementation 'org.tensorflow:tensorflow-lite:2.9.0'
+    // Tensorflow lite dependencies
+    implementation 'org.tensorflow:tensorflow-lite:0.0.0-nightly-SNAPSHOT'
+    implementation 'org.tensorflow:tensorflow-lite-gpu:0.0.0-nightly-SNAPSHOT'
+    implementation 'org.tensorflow:tensorflow-lite-support:0.0.0-nightly-SNAPSHOT'
 
 
     kapt "androidx.room:room-compiler:$version_room"
@@ -115,6 +121,4 @@ dependencies {
     // Kotlin
     implementation "androidx.activity:activity-ktx:$activity_version"
     implementation "io.ktor:ktor-client-gson:$ktor_version"
-
-    //implementation 'org.tensorflow:tensorflow-lite:0.0.0-nightly-SNAPSHOT'
 }

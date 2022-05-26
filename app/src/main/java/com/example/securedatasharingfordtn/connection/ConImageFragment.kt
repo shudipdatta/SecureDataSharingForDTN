@@ -105,7 +105,8 @@ class ConImageFragment : Fragment() {
     private fun calculateSimilarity(keywords: String, interests: String): Double {
         var keywordsMap = HashMap<String, Double>()
         for (keyword in keywords.toLowerCase().split(',')) {
-            keywordsMap[keyword.split(':').first()] = keyword.split(':').last().toDouble()
+            //keywordsMap[keyword.split(':').first()] = keyword.split(':').last().toDouble()
+            keywordsMap[keyword] = 1.0
         }
         val commonInt = ArrayList<String>(interests.toLowerCase().split(' '))
         commonInt.retainAll(keywordsMap.keys)

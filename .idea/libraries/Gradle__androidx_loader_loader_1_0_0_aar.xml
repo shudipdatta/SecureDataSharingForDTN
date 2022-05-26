@@ -8,10 +8,13 @@
       <root url="jar://$PROJECT_DIR$/../Thesis_docs/ImageCaptioningAndroid2 - Copy/android_apps/google_tflite_demo/demo/caches/transforms-3/acb5eac7ad7d5e2819692d4740678fd5/transformed/loader-1.0.0/jars/classes.jar!/" />
       <root url="file://$PROJECT_DIR$/../Thesis_docs/ImageCaptioningAndroid2 - Copy/android_apps/google_tflite_demo/demo/caches/transforms-3/acb5eac7ad7d5e2819692d4740678fd5/transformed/loader-1.0.0/AndroidManifest.xml" />
       <root url="file://$PROJECT_DIR$/../Thesis_docs/ImageCaptioningAndroid2 - Copy/android_apps/google_tflite_demo/demo/caches/transforms-3/acb5eac7ad7d5e2819692d4740678fd5/transformed/loader-1.0.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/acb5eac7ad7d5e2819692d4740678fd5/transformed/loader-1.0.0/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/acb5eac7ad7d5e2819692d4740678fd5/transformed/loader-1.0.0/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
       <root url="jar://$PROJECT_DIR$/../Thesis_docs/ImageCaptioningAndroid2 - Copy/android_apps/google_tflite_demo/demo/caches/modules-2/files-2.1/androidx.loader/loader/1.0.0/b9ef587f3e46c7fe5b00264989764e43ff45cada/loader-1.0.0-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.loader/loader/1.0.0/b9ef587f3e46c7fe5b00264989764e43ff45cada/loader-1.0.0-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

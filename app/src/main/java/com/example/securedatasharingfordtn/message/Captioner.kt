@@ -3,16 +3,20 @@ package com.example.securedatasharingfordtn.message
 import android.content.res.AssetManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.os.Build
 import android.os.SystemClock
 import android.util.Log
 import org.tensorflow.lite.Interpreter
+import java.io.BufferedReader
 import java.io.FileInputStream
 import java.io.IOException
+import java.io.InputStreamReader
 import java.nio.ByteBuffer
 import java.nio.MappedByteBuffer
 import java.nio.channels.FileChannel
 import java.nio.charset.StandardCharsets
 import java.util.*
+import kotlin.collections.HashMap
 
 
 class Captioner (val assets: AssetManager) {
@@ -40,6 +44,7 @@ class Captioner (val assets: AssetManager) {
     private var initial_state: Array<FloatArray>? = null
 
     var vocabulary: Vocabulary? = null
+    var stopwords: HashMap<String, Double>? = null
 
     init {
         val inceptionModelPath = getInceptionModelPath()
@@ -57,6 +62,8 @@ class Captioner (val assets: AssetManager) {
         lstm_state = Array(1) { FloatArray(1024) }
         initial_state = Array(1) { FloatArray(1024) }
         vocabulary = Vocabulary(assets)
+
+        stopwords = loadStopWords()
     }
 
 
@@ -88,6 +95,36 @@ class Captioner (val assets: AssetManager) {
 
     private fun getLSTMModelPath(): String? {
         return "lstm_2.tflite"
+    }
+
+    @Throws(IOException::class)
+    fun loadStopWords(): HashMap<String, Double> {
+        val wordList = HashMap<String, Double>()
+        val reader = BufferedReader(InputStreamReader(assets.open(getStopWordPath()!!)))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            reader.lines().forEach {
+                wordList[it.split(' ')[0]] = 1.0
+            }
+        }
+        reader.close()
+        return wordList
+    }
+
+    private fun getStopWordPath(): String? {
+        return "stopwords.txt"
+    }
+
+    fun getKeywordsFromCaption(caption: String): String {
+        var keywords = ""
+        for (s in caption.trim().split(' ')) {
+            if (stopwords?.containsKey(s) == false) {
+                if (keywords != "") {
+                    keywords += ","
+                }
+                keywords += s
+            }
+        }
+        return keywords
     }
 
     private fun runInference(): String {

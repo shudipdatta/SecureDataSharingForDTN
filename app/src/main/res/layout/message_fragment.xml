@@ -35,7 +35,16 @@
                     android:layout_height="wrap_content"
                     android:text="Capture Photo"
                     app:icon="@android:drawable/ic_menu_camera" />
+            </TableRow>
 
+            <TableRow>
+
+                <Button
+                    android:id="@+id/load_photo_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Load Photo"
+                    app:icon="@android:drawable/ic_menu_gallery" />
             </TableRow>
 
             <TableRow

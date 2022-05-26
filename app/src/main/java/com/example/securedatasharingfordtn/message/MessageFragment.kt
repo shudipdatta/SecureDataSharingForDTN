@@ -39,6 +39,7 @@ class MessageFragment : Fragment() {
 
     companion object {
         private const val CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1
+        private const val PHOTO_PICKER_REQUEST_CODE = 2
         private const val OWN_IMAGE_FOLDER = "own_images"
         private const val COLLECTED_IMAGE_FOLDER = "collected_images"
         private const val photoName = "photo.jpg" //initial save after photo is taken
@@ -90,6 +91,10 @@ class MessageFragment : Fragment() {
         //when user click capture photo button
         binding.capturePhotoButton.setOnClickListener {
             onLaunchCamera()
+        }
+        //when user load photo
+        binding.loadPhotoButton.setOnClickListener {
+            onLoadPhoto()
         }
 
         //initialize captioner and detector
@@ -184,6 +189,23 @@ class MessageFragment : Fragment() {
         }
     }
 
+    private fun onLoadPhoto() {
+//        // Launches photo picker in single-select mode.
+//        // This means that the user can select one photo or video.
+//        val intent = Intent(MediaStore.ACTION_PICK_IMAGES)
+//        startActivityForResult(intent, PHOTO_PICKER_REQUEST_CODE)
+        // Create a File reference for future access
+        photoFile = getPhotoFileUri(photoName, OWN_IMAGE_FOLDER)
+
+        val intent = Intent()
+        // wrap File object into a content provider //required for API >= 24
+        val fileProvider: Uri = FileProvider.getUriForFile(application, "com.example.securedatasharingfordtn.fileprovider", photoFile)
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider)
+        intent.type = "image/*"
+        intent.action = Intent.ACTION_GET_CONTENT
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PHOTO_PICKER_REQUEST_CODE);
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -217,6 +239,34 @@ class MessageFragment : Fragment() {
             }
             else { // Result was a failure
                 Toast.makeText(application, "Picture wasn't taken!", Toast.LENGTH_SHORT).show()
+            }
+        }
+        else if (requestCode == PHOTO_PICKER_REQUEST_CODE) {
+            if (resultCode == AppCompatActivity.RESULT_OK) {
+                val currentUri = data?.data
+                val loadedImage = MediaStore.Images.Media.getBitmap(this.requireActivity().contentResolver, currentUri)
+                val resizedBitmap: Bitmap = BitmapScaler.scaleToFitWidth(loadedImage, 1080)
+
+                val bytes = ByteArrayOutputStream()
+                resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 50, bytes)
+                val resizedFileName = DEVICE_ID + "_" + (System.currentTimeMillis() / 1000).toString()
+                val resizedFile = getPhotoFileUri(resizedFileName, OWN_IMAGE_FOLDER)
+                resizedFile.createNewFile()
+
+                val fos = FileOutputStream(resizedFile)
+                fos.write(bytes.toByteArray())
+                fos.close()
+
+                //update the gridview
+                val rotatedImage = getRotatedImage(resizedBitmap, resizedFile.path)
+                capturedItem = ImageGridItem(rotatedImage!!, resizedFileName, true, resizedFile.path, "", "", "self", false, "", false,
+                    preferences.getMission()!!
+                )
+
+                //generate caption
+                dialog = ProgressDialog.show(this.activity,"Generating Caption...","please wait..",true)
+                val cnnTask = CNNTask(capturedItem)
+                cnnTask.execute(resizedFile.path)
             }
         }
     }
@@ -286,6 +336,7 @@ class MessageFragment : Fragment() {
             dialog?.dismiss()
 
             capturedItem.caption = caption
+            capturedItem.keywords = captioner.getKeywordsFromCaption(caption)
             messageViewModel.storeImage(capturedItem)
 
             super.onPostExecute(caption)

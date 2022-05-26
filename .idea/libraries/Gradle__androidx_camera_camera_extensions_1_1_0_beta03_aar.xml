@@ -2,15 +2,20 @@
   <library name="Gradle: androidx.camera:camera-extensions:1.1.0-beta03@aar">
     <ANNOTATIONS>
       <root url="jar://$PROJECT_DIR$/../Thesis_docs/ImageCaptioningAndroid2 - Copy/android_apps/google_tflite_demo/demo/caches/transforms-3/30d60cedd1f3f2fd503695381a50bd2d/transformed/jetified-camera-extensions-1.1.0-beta03/annotations.zip!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/30d60cedd1f3f2fd503695381a50bd2d/transformed/jetified-camera-extensions-1.1.0-beta03/annotations.zip!/" />
     </ANNOTATIONS>
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/../Thesis_docs/ImageCaptioningAndroid2 - Copy/android_apps/google_tflite_demo/demo/caches/transforms-3/30d60cedd1f3f2fd503695381a50bd2d/transformed/jetified-camera-extensions-1.1.0-beta03/jars/classes.jar!/" />
       <root url="file://$PROJECT_DIR$/../Thesis_docs/ImageCaptioningAndroid2 - Copy/android_apps/google_tflite_demo/demo/caches/transforms-3/30d60cedd1f3f2fd503695381a50bd2d/transformed/jetified-camera-extensions-1.1.0-beta03/AndroidManifest.xml" />
       <root url="file://$PROJECT_DIR$/../Thesis_docs/ImageCaptioningAndroid2 - Copy/android_apps/google_tflite_demo/demo/caches/transforms-3/30d60cedd1f3f2fd503695381a50bd2d/transformed/jetified-camera-extensions-1.1.0-beta03/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/30d60cedd1f3f2fd503695381a50bd2d/transformed/jetified-camera-extensions-1.1.0-beta03/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/30d60cedd1f3f2fd503695381a50bd2d/transformed/jetified-camera-extensions-1.1.0-beta03/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/30d60cedd1f3f2fd503695381a50bd2d/transformed/jetified-camera-extensions-1.1.0-beta03/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
       <root url="jar://$PROJECT_DIR$/../Thesis_docs/ImageCaptioningAndroid2 - Copy/android_apps/google_tflite_demo/demo/caches/modules-2/files-2.1/androidx.camera/camera-extensions/1.1.0-beta03/91519fbda3538df7286eed6db362e855bc7dadf1/camera-extensions-1.1.0-beta03-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.camera/camera-extensions/1.1.0-beta03/91519fbda3538df7286eed6db362e855bc7dadf1/camera-extensions-1.1.0-beta03-sources.jar!/" />
     </SOURCES>
   </library>
 </component>
